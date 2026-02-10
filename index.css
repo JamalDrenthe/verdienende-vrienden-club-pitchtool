@@ -1,0 +1,346 @@
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(236, 72, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
+  }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+@keyframes progress-fill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.recording-pulse {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.scanline {
+  width: 100%;
+  height: 100px;
+  z-index: 10;
+  background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(236, 72, 153, 0.2) 50%, rgba(0,0,0,0) 100%);
+  opacity: 0.1;
+  animation: scan 2s linear infinite;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+}
+
+.progress-bar-fill {
+  animation: progress-fill 2s ease-out forwards;
+}
+
+/* === Click Ripple Effect === */
+button, [role="button"] {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button::after, [role="button"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(10);
+  opacity: 0;
+  transition: transform 0.5s, opacity 0.8s;
+}
+
+button:active::after, [role="button"]:active::after {
+  transform: scale(0);
+  opacity: 1;
+  transition: 0s;
+}
+
+/* === Active Press Scale === */
+button:active, [role="button"]:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+/* === Page Transition === */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: page-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* === Initial Load Overlay === */
+@keyframes load-logo-enter {
+  0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes load-logo-pulse {
+  0%, 100% { opacity: 0.85; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+@keyframes load-bar {
+  0% { width: 0%; }
+  40% { width: 60%; }
+  80% { width: 90%; }
+  100% { width: 100%; }
+}
+
+@keyframes load-fade-out {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); visibility: hidden; }
+}
+
+@keyframes load-glow-pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9); }
+  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes load-tagline {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes load-dot-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-20px) scale(1.5); opacity: 0.7; }
+}
+
+@keyframes load-ring-expand {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+@keyframes load-grid-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+.load-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0B1120;
+  overflow: hidden;
+}
+
+.load-overlay.fade-out {
+  animation: load-fade-out 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Grid background */
+.load-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: load-grid-scroll 8s linear infinite;
+}
+
+/* Radial glow behind logo */
+.load-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, rgba(236, 72, 153, 0.1) 50%, transparent 70%);
+  animation: load-glow-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Expanding ring */
+.load-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  animation: load-ring-expand 2s ease-out infinite;
+  pointer-events: none;
+}
+
+.load-ring-2 {
+  animation-delay: 0.7s;
+}
+
+.load-ring-3 {
+  animation-delay: 1.4s;
+}
+
+/* Logo */
+.load-overlay .logo {
+  animation: load-logo-enter 0.5s ease-out forwards, load-logo-pulse 2s ease-in-out 0.5s infinite;
+  position: relative;
+  z-index: 2;
+}
+
+/* Tagline */
+.load-tagline {
+  opacity: 0;
+  animation: load-tagline 0.4s ease-out 0.4s forwards;
+  position: relative;
+  z-index: 2;
+}
+
+/* Progress bar */
+.load-overlay .bar {
+  width: 160px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.load-overlay .bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ec4899, #06b6d4, #ec4899);
+  background-size: 200% 100%;
+  border-radius: 99px;
+  animation: load-bar 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Floating dots */
+.load-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(6, 182, 212, 0.4);
+  animation: load-dot-float 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.load-dot-1 { top: 20%; left: 15%; }
+.load-dot-2 { top: 70%; left: 80%; animation-delay: 0.5s; background: rgba(236, 72, 153, 0.3); }
+.load-dot-3 { top: 30%; left: 75%; animation-delay: 1.0s; }
+.load-dot-4 { top: 60%; left: 20%; animation-delay: 1.5s; background: rgba(236, 72, 153, 0.3); }
+.load-dot-5 { top: 80%; left: 50%; animation-delay: 2.0s; }
+.load-dot-6 { top: 15%; left: 60%; animation-delay: 0.3s; background: rgba(236, 72, 153, 0.3); }
+
+/* === Nav item hover underline === */
+@keyframes nav-underline {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* === Ecosystem Diagram === */
+@keyframes flow-animation {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+
+.flow-arrow {
+  animation: flow-animation 1.5s linear infinite;
+}
+
+.eco-tech-mesh {
+  background-image: linear-gradient(rgba(6,182,212,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.flow-delay-1 {
+  animation-delay: 0.5s;
+}
+
+.flow-delay-2 {
+  animation-delay: 1s;
+}
+
+/* === Background Grid Pattern === */
+.bg-grid-pattern {
+  background-image: linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Smooth number input — hide default spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* === VVC Chatbot === */
+@keyframes chatSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes chatMsgEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-slide-up {
+  animation: chatSlideUp 0.3s ease-out forwards;
+}
+
+.chat-msg-enter {
+  animation: chatMsgEnter 0.3s ease-out forwards;
+}
+
+.chat-bounce-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.chat-bounce-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.chat-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 4px;
+}
+
+.chat-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

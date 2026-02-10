@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export const ProDetail: React.FC = () => {
   const [activeTab, setActiveTab] = useState('VVC');
 
-  const tabs = ['VVC', 'INVESTBOTIQ', 'SPONTIVA', 'DJOBBA', 'AfterStudentHousing', 'FAQ'];
+  const tabs = ['VVC', 'INVESTBOTIQ', 'SPONTIVA', 'DJOBBA', 'WoningVry', 'FAQ'];
 
   const content: Record<string, any> = {
     'VVC': {
@@ -26,15 +26,15 @@ export const ProDetail: React.FC = () => {
       focus: ['Arbeid efficiency', 'Facturabiliteit', 'TGC output'],
       metrics: { 'Billable': '92%', 'Cash Cycle': '30d', 'Margin': '22%' }
     },
-    'AfterStudentHousing': {
-      title: 'ASH - Asset Management',
+    'WoningVry': {
+      title: 'WoningVry - Asset Management',
       focus: ['Bezetting', 'Onderhoudskosten', 'Waardestijging'],
       metrics: { 'Units': 85, 'Occupancy': '99%', 'Appreciation': '5.4%' }
     },
     'FAQ': {
       title: 'Veelgestelde Vragen (Pro)',
       faq: [
-        { q: "Waarom een gesloten motor?", a: "Controle over de flow: instroom via VVC, allocatie via INVESTBOTIQ, hefboom via Spontiva, cashflow uit DJOBBA, waarde-anker in ASH, huurwinst terug." },
+        { q: "Waarom een gesloten motor?", a: "Controle over de flow: instroom via VVC, allocatie via INVESTBOTIQ, hefboom via Spontiva, cashflow uit DJOBBA, waarde-anker in WoningVry, huurwinst terug." },
         { q: "Hoe waarborg je risicobeheer?", a: "Gate via VVC, besliskaders in INVESTBOTIQ, gescheiden diensten, hefboom met plafonds, vastgoed als collateral." },
         { q: "Hoe schaal je dit?", a: "Meer leden → meer kansen → grotere hefbomen → meer cashflow → extra vastgoed → sterkere terugstroom." }
       ]

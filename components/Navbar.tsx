@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { Home, Share2, Layers, FileText, Info, Menu, X, Globe, Moon, Sun, Shield } from 'lucide-react';
+import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield } from 'lucide-react';
 import { PageView, Language } from '../types';
 import { translations } from '../translations';
+
+const EuroIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M4 10h12M4 14h9M6 6a8 8 0 1 1 0 12" />
+  </svg>
+);
 
 interface NavbarProps {
   currentPage: PageView;
@@ -29,24 +35,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'home', label: t.home, icon: Home },
-    { id: 'ecosystem', label: t.ecosystem, icon: Share2 },
-    { id: 'other', label: t.other, icon: Layers },
-    { id: 'pitch', label: t.pitch, icon: FileText },
-    { id: 'about', label: t.about, icon: Info },
+    { id: 'pitch', label: t.pitch, icon: Play },
+    { id: 'basis', label: t.basis, icon: EuroIcon },
+    { id: 'bonus', label: t.bonus, icon: TrendingUp },
+    { id: 'join', label: t.join, icon: UserPlus },
+    ...(proMode ? [
+      { id: 'passief', label: t.passief, icon: FileText },
+      { id: 'ecosystem', label: t.ecosystem, icon: Share2 },
+    ] : []),
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-md border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <nav className="sticky top-0 z-50 bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
           {/* Brand / Logo Section */}
           <div className="flex-shrink-0 flex items-center gap-4 cursor-pointer" onClick={() => onNavigate('home')}>
-            <div className="px-4 py-1.5 bg-slate-100 dark:bg-[#162032] rounded-md border border-slate-200 dark:border-white/5 shadow-inner">
-               <span className="text-[10px] md:text-xs font-bold tracking-widest text-cyan-600 dark:text-cyan-400 uppercase">
-                 {language === 'nl' ? 'Verdienende Vrienden Club' : 'Earning Friends Club'}
-               </span>
-            </div>
+            <svg viewBox="0 0 260 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 md:h-10 w-auto" aria-label="VVC">
+              <text x="0" y="82" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontStyle="italic" fontSize="95" fill="currentColor" letterSpacing="-4" className="text-slate-900 dark:text-white">VVC</text>
+              <circle cx="225" cy="75" r="10" fill="#E91E8C"/>
+            </svg>
           </div>
 
           {/* Desktop Nav */}
@@ -58,9 +67,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={item.id}
                     onClick={() => onNavigate(item.id as PageView)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                    className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                       isActive
-                        ? 'bg-slate-100 dark:bg-[#1E293B] text-cyan-600 dark:text-cyan-400 shadow-sm border border-slate-200 dark:border-white/5'
+                        ? 'bg-slate-100 dark:bg-white/5 text-cyan-600 dark:text-cyan-400 shadow-sm border border-slate-200/80 dark:border-white/10'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5'
                     }`}
                   >
@@ -114,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass border-t border-slate-200 dark:border-slate-700">
+        <div className="md:hidden bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-xl border-t border-slate-200 dark:border-white/5">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {navItems.map((item) => (
               <button

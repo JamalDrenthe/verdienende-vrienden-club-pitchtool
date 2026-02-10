@@ -13,7 +13,7 @@ export interface EcosystemNode {
   metrics?: string[];
 }
 
-export type PageView = 'home' | 'ecosystem' | 'other' | 'pitch' | 'about' | 'pro';
+export type PageView = 'home' | 'ecosystem' | 'pitch' | 'basis' | 'bonus' | 'passief' | 'join' | 'pro';
 
 export type Language = 'nl' | 'en';
 

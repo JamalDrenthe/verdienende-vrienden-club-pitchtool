@@ -12,26 +12,10 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
     <div className="relative w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] bg-[#0F1623] rounded-3xl border border-white/5 overflow-hidden shadow-2xl group">
       
       {/* Background Tech Mesh */}
-      <div className="absolute inset-0 opacity-20" 
-           style={{ 
-             backgroundImage: 'linear-gradient(rgba(6,182,212,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.1) 1px, transparent 1px)', 
-             backgroundSize: '40px 40px' 
-           }}>
-      </div>
+      <div className="absolute inset-0 opacity-20 eco-tech-mesh"></div>
       
       {/* Vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0F1623_80%)] pointer-events-none"></div>
-
-      {/* Styles for flow animation */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes flow-animation {
-          from { stroke-dashoffset: 24; }
-          to { stroke-dashoffset: 0; }
-        }
-        .flow-arrow {
-          animation: flow-animation 1.5s linear infinite;
-        }
-      `}} />
 
       {/* Connection Layer (SVG) */}
       <svg 
@@ -57,9 +41,9 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
           </filter>
         </defs>
 
-        {/* 1. VVC (Top 50,15) -> InvestBotiq (Center 50,40) */}
+        {/* 1. VVC (Top 50,18) -> InvestBotiq (Center 50,42) */}
         <path 
-          d="M 50 23 L 50 33" 
+          d="M 50 26 L 50 34" 
           stroke="url(#flowGradient)" 
           strokeWidth="2"
           vectorEffect="non-scaling-stroke"
@@ -70,9 +54,9 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
           className="flow-arrow"
         />
 
-        {/* 2. InvestBotiq (Center 50,40) -> Spontiva (Right 85,60) */}
+        {/* 2. InvestBotiq (Center 50,42) -> Spontiva (Right 82,65) */}
         <path 
-          d="M 56 40 Q 85 40 85 53" 
+          d="M 57 44 Q 82 44 82 57" 
           stroke="url(#flowGradient)" 
           strokeWidth="2" 
           vectorEffect="non-scaling-stroke"
@@ -80,13 +64,12 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
           fill="none"
           filter="url(#glow)"
           strokeDasharray="4 4"
-          className="flow-arrow"
-          style={{ animationDelay: '0.5s' }}
+          className="flow-arrow flow-delay-1"
         />
 
-        {/* 3. Spontiva (Right 85,60) -> Djobba (Bottom 50,85) */}
+        {/* 3. Spontiva (Right 82,65) -> Djobba (Bottom 50,82) */}
         <path 
-          d="M 85 67 Q 85 85 57 85" 
+          d="M 82 73 Q 82 82 57 82" 
           stroke="url(#flowGradient)" 
           strokeWidth="2" 
           vectorEffect="non-scaling-stroke"
@@ -94,13 +77,12 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
           fill="none"
           filter="url(#glow)"
           strokeDasharray="4 4"
-          className="flow-arrow"
-          style={{ animationDelay: '1s' }}
+          className="flow-arrow flow-delay-2"
         />
 
-        {/* 4. InvestBotiq (Center 50,40) -> ASH (Left 15,60) */}
+        {/* 4. InvestBotiq (Center 50,42) -> WoningVry (Left 18,65) */}
         <path 
-          d="M 44 40 Q 15 40 15 53" 
+          d="M 43 44 Q 18 44 18 57" 
           stroke="url(#flowGradient)" 
           strokeWidth="2" 
           vectorEffect="non-scaling-stroke"
@@ -108,8 +90,7 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
           fill="none"
           filter="url(#glow)"
           strokeDasharray="4 4"
-          className="flow-arrow"
-          style={{ animationDelay: '0.5s' }}
+          className="flow-arrow flow-delay-1"
         />
 
       </svg>
@@ -141,7 +122,7 @@ export const EcosystemDiagram: React.FC<EcosystemDiagramProps> = ({ nodes, selec
                 {/* Main Circle */}
                 <div className={`
                 relative flex flex-col items-center justify-center
-                w-20 h-20 md:w-28 md:h-28 rounded-full
+                w-20 h-20 md:w-24 md:h-24 rounded-full
                 backdrop-blur-xl border-2 transition-all duration-300
                 ${isSelected 
                     ? `border-${node.color} bg-[#0F1623] shadow-[0_0_30px_rgba(6,182,212,0.3)] scale-110 z-20` 

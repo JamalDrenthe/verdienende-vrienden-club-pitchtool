@@ -22,11 +22,13 @@ A multilingual pitch tool built with React, TypeScript, and Vite. Features dark/
 **Prerequisites:** Node.js (version 18 or higher)
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Start the development server:**
+
    ```bash
    npm run dev
    ```
@@ -41,7 +43,7 @@ A multilingual pitch tool built with React, TypeScript, and Vite. Features dark/
 
 ## Project Structure
 
-```
+```text
 ├── components/     # Reusable React components
 ├── pages/         # Page components
 ├── App.tsx        # Main application component
