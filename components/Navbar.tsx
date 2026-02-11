@@ -143,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             ))}
             <div className="pt-4 border-t border-slate-200 dark:border-slate-700 mt-4 flex justify-between items-center px-3">
-               <span className="text-slate-500 dark:text-slate-400 text-sm">{t.settings}</span>
+               <a href="https://verdienendevrienden.club" target="_blank" rel="noopener noreferrer" className="px-4 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-sm font-bold rounded-full transition-all duration-300 shadow-sm hover:shadow-cyan-500/25">{t.settings}</a>
                <div className="flex gap-2">
                  <button onClick={toggleTheme} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
                     {isDarkMode ? <Sun className="h-4 w-4 text-slate-400" /> : <Moon className="h-4 w-4 text-slate-500" />}

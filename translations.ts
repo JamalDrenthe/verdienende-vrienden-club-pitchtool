@@ -136,7 +136,7 @@ export const translations: Record<Language, TranslationContent> = {
       bonus: 'Bonus',
       passief: 'Passief',
       join: 'Join',
-      settings: 'Instellingen',
+      settings: 'Back',
       proOn: 'Pro Aan',
       proOff: 'Pro Uit'
     },
@@ -281,7 +281,7 @@ export const translations: Record<Language, TranslationContent> = {
       bonus: 'Bonus',
       passief: 'Passive',
       join: 'Join',
-      settings: 'Settings',
+      settings: 'Back',
       proOn: 'Pro On',
       proOff: 'Pro Off'
     },

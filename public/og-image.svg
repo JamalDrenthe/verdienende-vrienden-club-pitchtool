@@ -1,0 +1,73 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0B1120"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(6,182,212,0.06)" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#8B5CF6" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#EC4899" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Ambient glow -->
+  <ellipse cx="600" cy="280" rx="400" ry="250" fill="url(#glowGrad)"/>
+  
+  <!-- Top accent line -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#barGrad)"/>
+  
+  <!-- VVC Logo -->
+  <text x="600" y="240" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-style="italic" font-size="140" fill="white" letter-spacing="-6" text-anchor="middle">VVC</text>
+  <circle cx="720" cy="215" r="14" fill="#EC4899"/>
+  
+  <!-- Divider -->
+  <rect x="500" y="280" width="200" height="2" rx="1" fill="url(#barGrad)" opacity="0.6"/>
+  
+  <!-- Tagline -->
+  <text x="600" y="330" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="22" fill="url(#textGrad)" text-anchor="middle" letter-spacing="8" text-transform="uppercase">VERDIENENDE VRIENDEN CLUB</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="375" font-family="Arial, Helvetica, sans-serif" font-weight="400" font-size="18" fill="#94A3B8" text-anchor="middle" letter-spacing="1">Ontwerp Je Financiële Vrijheid</text>
+  
+  <!-- Stats row -->
+  <g transform="translate(250, 420)">
+    <!-- Stat 1 -->
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="36" fill="white" text-anchor="middle">€30</text>
+    <text x="0" y="28" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="11" fill="#64748B" text-anchor="middle" letter-spacing="3">PER UUR</text>
+    
+    <!-- Divider -->
+    <rect x="145" y="-20" width="1" height="55" fill="rgba(255,255,255,0.1)"/>
+    
+    <!-- Stat 2 -->
+    <text x="300" y="0" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="36" fill="white" text-anchor="middle">€300</text>
+    <text x="300" y="28" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="11" fill="#64748B" text-anchor="middle" letter-spacing="3">PER PLAATSING</text>
+    
+    <!-- Divider -->
+    <rect x="445" y="-20" width="1" height="55" fill="rgba(255,255,255,0.1)"/>
+    
+    <!-- Stat 3 -->
+    <text x="600" y="0" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="36" fill="white" text-anchor="middle">€3K+</text>
+    <text x="600" y="28" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="11" fill="#64748B" text-anchor="middle" letter-spacing="3">PASSIEF / MAAND</text>
+  </g>
+  
+  <!-- Bottom bar -->
+  <rect x="0" y="540" width="1200" height="90" fill="rgba(0,0,0,0.3)"/>
+  <text x="600" y="593" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="14" fill="#475569" text-anchor="middle" letter-spacing="2">VERDIENENDEVRIENDEN.CLUB</text>
+  
+  <!-- Bottom accent line -->
+  <rect x="0" y="627" width="1200" height="3" fill="url(#barGrad)"/>
+</svg>
