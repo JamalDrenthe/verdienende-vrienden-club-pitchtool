@@ -51,11 +51,16 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-20">
           
           {/* Brand / Logo Section */}
-          <div className="flex-shrink-0 flex items-center gap-4 cursor-pointer" onClick={() => onNavigate('home')}>
-            <svg viewBox="0 0 260 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 md:h-10 w-auto" aria-label="VVC">
-              <text x="0" y="82" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontStyle="italic" fontSize="95" fill="currentColor" letterSpacing="-4" className="text-slate-900 dark:text-white">VVC</text>
-              <circle cx="225" cy="75" r="10" fill="#E91E8C"/>
-            </svg>
+          <div className="flex-shrink-0 flex items-center gap-3 cursor-pointer group select-none" onClick={() => onNavigate('home')}>
+            <img
+              src="/vvc-logo.svg"
+              alt="VVC Logo"
+              className="w-9 h-9 rounded-full shadow-[0_0_12px_rgba(230,0,126,0.35)] group-hover:scale-105 transition-transform shrink-0"
+            />
+            <div className="flex items-center">
+              <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
+              <span className="text-pink-500 font-bold text-2xl leading-none">.</span>
+            </div>
           </div>
 
           {/* Desktop Nav */}

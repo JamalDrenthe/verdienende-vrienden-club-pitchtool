@@ -97,10 +97,13 @@ export default function App() {
           <div className="load-dot load-dot-6" />
 
           {/* Logo */}
-          <svg viewBox="0 0 260 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo h-14 w-auto">
-            <text x="0" y="82" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontStyle="italic" fontSize="95" fill="white" letterSpacing="-4">VVC</text>
-            <circle cx="225" cy="75" r="10" fill="#E91E8C"/>
-          </svg>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <img
+              src="/vvc-logo.svg"
+              alt="VVC Logo"
+              className="logo w-16 h-16 rounded-full shadow-[0_0_25px_rgba(230,0,126,0.45)] shrink-0"
+            />
+          </div>
 
           {/* Tagline */}
           <p className="load-tagline text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Executie is de sleutel</p>
