@@ -244,7 +244,7 @@ export const translations: Record<Language, TranslationContent> = {
       months12: '12 maanden',
       yearLabel: 'jaar',
       totalLabel: 'totaal',
-      cta: 'Join The Club',
+      cta: 'Join',
     },
     join: {
       badgeText: 'OPEN VOOR INTAKE',
@@ -389,7 +389,7 @@ export const translations: Record<Language, TranslationContent> = {
       months12: '12 months',
       yearLabel: 'year',
       totalLabel: 'total',
-      cta: 'Join The Club',
+      cta: 'Join',
     },
     join: {
       badgeText: 'OPEN FOR INTAKE',

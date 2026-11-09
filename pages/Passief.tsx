@@ -344,7 +344,7 @@ export const Passief: React.FC<PassiefProps> = ({
               onClick={() => onNavigate('join')}
               className="group flex-1 py-4 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] flex items-center justify-center gap-2 active:scale-95"
             >
-              <span>{t.cta} — Direct Inschrijven</span>
+              <span>JOIN</span>
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

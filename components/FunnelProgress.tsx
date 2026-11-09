@@ -14,7 +14,7 @@ export const FUNNEL_STEPS: { id: PageView; num: number; labelNl: string; labelEn
   { id: 'basis', num: 2, labelNl: 'Basisvergoeding', labelEn: 'Base Salary', subtitleNl: '€30 per uur', subtitleEn: '€30 per hour' },
   { id: 'bonus', num: 3, labelNl: 'Plaatsingsbonus', labelEn: 'Deal Bonus', subtitleNl: '€300 per deal', subtitleEn: '€300 per deal' },
   { id: 'passief', num: 4, labelNl: 'Passief Inkomen', labelEn: 'Passive Residuals', subtitleNl: '€25/mnd recurring', subtitleEn: '€25/mo recurring' },
-  { id: 'join', num: 5, labelNl: 'Inschrijven', labelEn: 'Join Club', subtitleNl: 'CRMos Direct', subtitleEn: 'CRMos Direct' },
+  { id: 'join', num: 5, labelNl: 'Join', labelEn: 'Join', subtitleNl: 'CRMos Direct', subtitleEn: 'CRMos Direct' },
 ];
 
 export const FunnelProgress: React.FC<FunnelProgressProps> = ({
