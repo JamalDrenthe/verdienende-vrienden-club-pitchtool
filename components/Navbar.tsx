@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield } from 'lucide-react';
+import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { PageView, Language } from '../types';
 import { translations } from '../translations';
+import { sfx } from '../lib/soundFx';
 
 const EuroIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -31,7 +32,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   toggleLanguage
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const t = translations[language].nav;
+
+  const handleToggleSound = () => {
+    const next = !soundEnabled;
+    setSoundEnabled(next);
+    sfx.setEnabled(next);
+    if (next) sfx.click();
+  };
 
   const navItems = [
     { id: 'home', label: t.home, icon: Home },
@@ -57,9 +66,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               alt="VVC Logo"
               className="w-9 h-9 rounded-full shadow-[0_0_16px_rgba(230,0,126,0.5)] group-hover:scale-105 transition-transform shrink-0"
             />
-            <div className="flex items-center">
-              <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
-              <span className="text-[#e6007e] font-black text-2xl leading-none">.</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center">
+                <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
+                <span className="text-[#e6007e] font-black text-2xl leading-none">.</span>
+              </div>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-[#e6007e]/20 text-[#e6007e] border border-[#e6007e]/40 shadow-sm">
+                <Sparkles className="w-2.5 h-2.5 animate-pulse" />
+                3D SHOW
+              </span>
             </div>
           </div>
 
@@ -89,7 +104,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Actions */}
           <div className="hidden md:flex items-center gap-3">
             <button 
+              onClick={handleToggleSound}
+              title={soundEnabled ? 'Geluidseffecten dempen' : 'Geluidseffecten inschakelen'}
+              aria-label={soundEnabled ? 'Geluidseffecten dempen' : 'Geluidseffecten inschakelen'}
+              className="p-2.5 rounded-xl text-slate-500 dark:text-[#888888] hover:text-[#e6007e] dark:hover:text-[#e6007e] hover:bg-slate-100 dark:hover:bg-[#111111] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-[#222222]"
+            >
+              {soundEnabled ? <Volume2 className="h-4 w-4 text-[#e6007e]" /> : <VolumeX className="h-4 w-4" />}
+            </button>
+            <button 
               onClick={toggleTheme}
+              aria-label={isDarkMode ? 'Lichte modus inschakelen' : 'Donkere modus inschakelen'}
               className="p-2.5 rounded-xl text-slate-500 dark:text-[#888888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111111] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-[#222222]"
             >
               {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -150,7 +174,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="pt-4 border-t border-slate-200 dark:border-[#1f1f1f] mt-4 flex justify-between items-center px-3">
                <a href="https://verdienendevrienden.club" target="_blank" rel="noopener noreferrer" className="px-4 py-1.5 bg-[#e6007e] hover:bg-[#c00069] text-white text-sm font-bold rounded-full transition-all duration-300 shadow-md shadow-[#e6007e]/25">{t.settings}</a>
                <div className="flex gap-2">
-                 <button onClick={toggleTheme} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
+                 <button onClick={handleToggleSound} aria-label={soundEnabled ? 'Geluid dempen' : 'Geluid inschakelen'} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
+                    {soundEnabled ? <Volume2 className="h-4 w-4 text-[#e6007e]" /> : <VolumeX className="h-4 w-4 text-slate-500" />}
+                 </button>
+                 <button onClick={toggleTheme} aria-label={isDarkMode ? 'Lichte modus' : 'Donkere modus'} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
                     {isDarkMode ? <Sun className="h-4 w-4 text-slate-400" /> : <Moon className="h-4 w-4 text-slate-500" />}
                  </button>
                  <button onClick={toggleLanguage} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center w-10 h-10 font-bold text-xs uppercase">
