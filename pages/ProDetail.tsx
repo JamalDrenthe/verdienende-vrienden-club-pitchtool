@@ -7,27 +7,27 @@ export const ProDetail: React.FC = () => {
 
   const content: Record<string, any> = {
     'VVC': {
-      title: 'VVC - De Toegangspoort',
-      focus: ['Instroom en gating van leden', 'Kwaliteit/fit-scan', 'Conversie naar kernmotor'],
+      title: 'VVC: De Toegangspoort',
+      focus: ['Instroom en kwalificatie van leden', 'Kwaliteit en fit scan', 'Conversie naar kernactiviteiten'],
       metrics: { 'Leden': 124, 'Conversie': '85%', 'Wachtlijst': 45 }
     },
     'INVESTBOTIQ': {
-      title: 'INVESTBOTIQ - Allocatie Intelligence',
-      focus: ['Deal throughput', 'IRR-targets', 'Risicoprofiel per deal'],
+      title: 'INVESTBOTIQ: Allocatie Intelligence',
+      focus: ['Deal volume', 'IRR targets', 'Risicoprofiel per deal'],
       metrics: { 'Active Deals': 3, 'Avg ARR': '12%', 'Volume': '€2.4M' }
     },
     'SPONTIVA': {
-      title: 'SPONTIVA - Leverage',
+      title: 'SPONTIVA: Leverage',
       focus: ['Hefboom ratio', 'Funding partners', 'Rente marges'],
       metrics: { 'LTV': '65%', 'Rente': '4.2%', 'Partners': 4 }
     },
     'DJOBBA': {
-      title: 'DJOBBA - Cashflow Engine',
-      focus: ['Arbeid efficiency', 'Facturabiliteit', 'TGC output'],
+      title: 'DJOBBA: Cashflow Model',
+      focus: ['Arbeid efficiency', 'Facturabiliteit', 'Uren output'],
       metrics: { 'Billable': '92%', 'Cash Cycle': '30d', 'Margin': '22%' }
     },
     'WoningVry': {
-      title: 'WoningVry - Asset Management',
+      title: 'WoningVry: Asset Management',
       focus: ['Bezetting', 'Onderhoudskosten', 'Waardestijging'],
       metrics: { 'Units': 85, 'Occupancy': '99%', 'Appreciation': '5.4%' }
     },

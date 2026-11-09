@@ -72,7 +72,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, language }) => {
           </button>
         </div>
 
-        {/* Symmetrical Stats Bar — Grid with Equal 3-Columns */}
+        {/* Symmetrical Stats Bar | Grid with Equal 3-Columns */}
         <TiltCard maxTilt={4} glowColor="magenta" className="w-full max-w-3xl bg-[#0a0a0a] rounded-2xl border border-[#222222] shadow-2xl overflow-hidden">
           <div className="grid grid-cols-3 divide-x divide-[#222222] py-4 px-2 sm:px-6">
             {t.stats.map((stat, idx) => (
@@ -99,7 +99,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, language }) => {
           <div className="h-px flex-1 max-w-[80px] bg-gradient-to-l from-transparent to-[#333333]" />
         </div>
 
-        {/* Symmetrical Features Grid — Equal Heights */}
+        {/* Symmetrical Features Grid | Equal Heights */}
         <div className="grid md:grid-cols-3 gap-5 mb-6 items-stretch">
           {t.features.map((feat, idx) => {
             const Icon = featureIcons[idx];

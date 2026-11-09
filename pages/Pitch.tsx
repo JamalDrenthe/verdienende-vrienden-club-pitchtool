@@ -44,7 +44,7 @@ export const Pitch: React.FC<PitchProps> = ({ onNavigate, language }) => {
           {t.subtitle}
         </p>
         
-        {/* Symmetrical 3 Pillars Grid — Equal Heights */}
+        {/* Symmetrical 3 Pillars Grid | Equal Heights */}
         <div className="grid md:grid-cols-3 gap-6 mb-14 text-left items-stretch">
           {t.cards.map((card, idx) => {
             const Icon = icons[idx];

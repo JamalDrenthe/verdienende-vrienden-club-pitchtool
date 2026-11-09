@@ -182,7 +182,7 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
               <Award className="w-5 h-5 text-[#e6007e] shrink-0" />
               <span className="text-xs sm:text-sm font-bold text-[#a1a1aa] uppercase tracking-wider">Directe Fee per afgeronde deal:</span>
             </div>
-            <span className="text-base sm:text-lg font-black text-white tabular-nums tracking-tight">€300,- netto bonus</span>
+            <span className="text-base sm:text-lg font-black text-white tabular-nums tracking-tight">€300 netto bonus</span>
           </div>
         </div>
       </div>

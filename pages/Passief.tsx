@@ -98,7 +98,7 @@ export const Passief: React.FC<PassiefProps> = ({
         <p className="text-[#d4d4d8] mt-3.5 text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-normal text-balance">{t.subtitle}</p>
       </div>
 
-      {/* Unified Cumulative Bar Across 3 Pillars — Symmetrical Terminal Banner */}
+      {/* Unified Cumulative Bar Across 3 Pillars | Symmetrical Terminal Banner */}
       <TiltCard maxTilt={4} glowColor="magenta" className="mb-10 rounded-3xl bg-[#0a0a0a] border border-[#222222] shadow-2xl relative overflow-hidden">
         <div className="p-6 sm:p-8">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#e6007e]/12 rounded-full blur-3xl pointer-events-none" />
@@ -138,7 +138,7 @@ export const Passief: React.FC<PassiefProps> = ({
             </div>
           </div>
 
-          {/* Gamified Level Rank Badge — Symmetrical */}
+          {/* Gamified Level Rank Badge | Symmetrical */}
           <div className="mt-6 pt-6 border-t border-[#1c1c1c]">
             <GameRankBadge monthlyTotal={grandTotal} />
           </div>
@@ -224,7 +224,7 @@ export const Passief: React.FC<PassiefProps> = ({
                           Totaal Passief Inkomen
                         </div>
                         <p className="text-xs sm:text-sm text-[#d4d4d8] font-medium">
-                          {totalReferrals} {totalReferrals === 1 ? 'kandidaat' : 'kandidaten'} × €25,- /mnd
+                          {totalReferrals} {totalReferrals === 1 ? 'kandidaat' : 'kandidaten'} × €25 /mnd
                         </p>
                       </div>
 

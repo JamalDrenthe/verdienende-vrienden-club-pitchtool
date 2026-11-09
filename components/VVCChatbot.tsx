@@ -14,42 +14,42 @@ interface Message {
 const knowledgeBase = [
   {
     keywords: ['verdien', 'geld', 'salaris', 'inkomen', 'betaald', '30', '300', 'finance'],
-    response: "Het VVC Verdienmodel: Een Blueprint voor Groei.\n\n1. **Actief (Basis):** €30,- per uur gegarandeerd tijdens acquisitie.\n2. **Direct (Jacht):** €300,- bonus per succesvolle plaatsing. Direct uitbetaald.\n3. **Passief (Vermogen):** €25,- per maand per actieve kandidaat. Dit is het 'Sneeuwbaleffect'.\n\nRekenvoorbeeld: 10 plaatsingen/maand = €3.000,- passief inkomen na 12 maanden."
+    response: "Het VVC Verdienmodel bestaat uit drie pijlers:\n\n1. **Uurvergoeding:** €30 per uur gegarandeerd tijdens acquisitie.\n2. **Plaatsingsbonus:** €300 bonus per afgeronde plaatsing direct uitbetaald.\n3. **Passief Portfolio:** €25 per maand per actieve geplaatste kandidaat.\n\nRekenvoorbeeld: 120 plaatsingen per jaar levert €3.000 per maand passief inkomen op."
   },
   {
     keywords: ['cultuur', 'waarden', 'sfeer', 'normen', 'dna'],
-    response: "Het VVC DNA bestaat uit drie ononderhandelbare pijlers:\n\n1. **Loyaliteit:** Wij zijn partners, geen collega's. Geen politiek.\n2. **Executie:** Resultaat is de enige waarheid. Wij praten niet, wij leveren.\n3. **Eigenaarschap:** U bent de CEO van uw eigen route. Vrijheid met rugdekking van de club."
+    response: "De kernwaarden van de VVC:\n\n1. **Loyaliteit:** Wij werken als vaste partners samen.\n2. **Executie:** Concrete resultaten en duidelijke afspraken.\n3. **Eigenaarschap:** Zelfstandig ondernemen met professionele clubondersteuning."
   },
   {
     keywords: ['wat is vvc', 'over ons', 'wie zijn jullie', 'bedrijf', 'club'],
-    response: "De Verdienende Vrienden Club opereert op het snijvlak van vriendschap en ongekende zakelijke groei. Wij elimineren ruis voor bedrijven door processen te optimaliseren, en bieden toptalent een podium zonder plafond."
+    response: "De Verdienende Vrienden Club is een besloten netwerk van commerciële professionals. Wij koppelen specialisten aan vacatures en projecten met vaste uurvergoedingen, plaatsingsbonussen en maandelijks passief inkomen."
   },
   {
     keywords: ['diensten', 'wat doen jullie', 'klanten', 'aanbod', 'product'],
-    response: "Onze 360° Kwaliteitsaanpak voor partners:\n\n• **Kwaliteitscontrole:** Grondige analyse van reviews & specificaties.\n• **Workflow Optimalisatie:** Het elimineren van inefficiëntie in systemen.\n• **Mystery Shopping:** De ongefilterde realiteit van de klantbeleving in kaart brengen."
+    response: "Onze operationele diensten voor partners:\n\n• **Werving & Selectie:** Selectie en plaatsing van kandidaten op openstaande rollen.\n• **Procesoptimalisatie:** Systemen stroomlijnen binnen organisaties.\n• **Kwaliteitscontrole:** Directe analyse van klantervaring en conversie."
   },
   {
     keywords: ['double', 'team', 'pilot', 'duo', 'samenwerken'],
-    response: "**Project: Double Team**\n\nDe perfecte symbiose van specialisme:\n\n1. **De Netwerker:** Opent deuren en bouwt relaties.\n2. **De Killer Closer:** Sluit de deal en verzilvert het contract.\n\nResultaat: 1 Team, 1 Taak. Gemiddelde output: €4.000,- p.p./maand."
+    response: "**Double Team Formule**\n\nSamenwerking tussen twee specialisten:\n\n1. **Netwerker:** Legt contacten en opent deuren.\n2. **Closer:** Rondt het contract af.\n\nResultaat: Directe fee verdeling en structurele opbouw van passief inkomen."
   },
   {
     keywords: ['passief', 'sneeuwbal', 'toekomst', 'pensioen'],
-    response: "**Het Sneeuwbaleffect**\n\nUw financiële motor. Elke plaatsing levert €25,-/maand op zolang de kandidaat blijft. Dit stapelt cumulatief op. \n\n• Maand 1: €250 (bij 10 plaatsingen)\n• Jaar 1: €3.000 /maand passief.\n\nDit is hoe u stopt met werken voor geld, en geld laat werken voor u."
+    response: "**Passief Inkomen Model**\n\nElke geplaatste kandidaat levert maandelijks €25 op zolang de plaatsing actief blijft.\n\n• 10 kandidaten: €250 per maand\n• 120 kandidaten: €3.000 per maand\n\nDit inkomen keert maandelijks terug bovenop uw uren en plaatsingsbonussen."
   }
 ];
 
 const suggestions = [
-  { label: "Het Verdienmodel", icon: <DollarSign size={12} /> },
-  { label: "Double Team Pilot", icon: <Users size={12} /> },
-  { label: "Sneeuwbaleffect", icon: <Zap size={12} /> },
-  { label: "Onze Cultuur", icon: <ShieldCheck size={12} /> },
+  { label: "Verdienmodel", icon: <DollarSign size={12} /> },
+  { label: "Double Team", icon: <Users size={12} /> },
+  { label: "Passief Inkomen", icon: <Zap size={12} /> },
+  { label: "Kernwaarden", icon: <ShieldCheck size={12} /> },
 ];
 
 export const VVCChatbot: React.FC<VVCChatbotProps> = ({ onClose }) => {
   const initialMessage: Message = {
     id: 1,
     sender: 'bot',
-    text: 'Welkom bij de Verdienende Vrienden Club.\n\nIk ben uw strategische partner voor vragen over ons verdienmodel, de cultuur van executie en onze kwaliteitsnormen.\n\nU bent aan zet. Waar starten we de route?'
+    text: 'Welkom bij de Verdienende Vrienden Club.\n\nStel hier uw vragen over het verdienmodel (€30 per uur, €300 bonus, €25 per maand passief), de Double Team opzet of onze intake procedure.'
   };
 
   const [messages, setMessages] = useState<Message[]>([initialMessage]);
@@ -69,7 +69,7 @@ export const VVCChatbot: React.FC<VVCChatbotProps> = ({ onClose }) => {
         return entry.response;
       }
     }
-    return "Dat ligt buiten mijn huidige focusgebied.\n\nMijn expertise ligt bij:\n• Het Verdienmodel & Passief Inkomen\n• De 'Double Team' Strategie\n• Onze Cultuur van Executie";
+    return "Onderwerp niet herkend. Vraag gerust naar:\n• Uurvergoeding (€30 per uur)\n• Plaatsingsbonus (€300 per deal)\n• Passief inkomen (€25 per maand per kandidaat)\n• Double Team samenwerking";
   };
 
   const handleSend = (text?: string) => {

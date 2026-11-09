@@ -77,13 +77,13 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
             ))}
           </div>
 
-          {/* Quick Value Banner — Symmetrical Brutalist VVC Style */}
+          {/* Quick Value Banner | Symmetrical Brutalist VVC Style */}
           <div className="mt-8 p-5 rounded-2xl bg-[#0a0a0a] border border-[#222222] flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-3">
               <span className="w-3 h-3 rounded-full bg-[#e6007e] shadow-[0_0_10px_rgba(230,0,126,0.8)]" />
               <span className="text-xs sm:text-sm font-bold text-[#a1a1aa] uppercase tracking-wider">Gegarandeerde Uurvergoeding:</span>
             </div>
-            <span className="text-base sm:text-lg font-black text-white tabular-nums tracking-tight">€30,- ex. btw / uur</span>
+            <span className="text-base sm:text-lg font-black text-white tabular-nums tracking-tight">€30 ex btw per uur</span>
           </div>
         </div>
 
