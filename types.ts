@@ -17,6 +17,13 @@ export type PageView = 'home' | 'ecosystem' | 'pitch' | 'basis' | 'bonus' | 'pas
 
 export type Language = 'nl' | 'en';
 
+export interface CalculatorState {
+  hours: number;
+  placements: number;
+  referrals: number;
+  refValue: number;
+}
+
 export interface NavItem {
   id: PageView;
   label: string;

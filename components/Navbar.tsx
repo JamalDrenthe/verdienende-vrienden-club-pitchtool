@@ -38,9 +38,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'pitch', label: t.pitch, icon: Play },
     { id: 'basis', label: t.basis, icon: EuroIcon },
     { id: 'bonus', label: t.bonus, icon: TrendingUp },
+    { id: 'passief', label: t.passief, icon: FileText },
     { id: 'join', label: t.join, icon: UserPlus },
     ...(proMode ? [
-      { id: 'passief', label: t.passief, icon: FileText },
       { id: 'ecosystem', label: t.ecosystem, icon: Share2 },
     ] : []),
   ];

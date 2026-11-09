@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { Navbar } from './components/Navbar';
+import { FunnelProgress, FUNNEL_STEPS } from './components/FunnelProgress';
 import { VVCChatbot } from './components/VVCChatbot';
 import { Home } from './pages/Home';
 import { Ecosystem } from './pages/Ecosystem';
@@ -10,7 +11,7 @@ import { Bonus } from './pages/Bonus';
 import { Passief } from './pages/Passief';
 import { Join } from './pages/Join';
 import { ProDetail } from './pages/ProDetail';
-import { PageView, Language } from './types';
+import { PageView, Language, CalculatorState } from './types';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageView>('home');
@@ -20,6 +21,30 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+
+  // Cumulative Calculator State across all slides
+  const [calcState, setCalcState] = useState<CalculatorState>({
+    hours: 40,
+    placements: 5,
+    referrals: 120,
+    refValue: 25,
+  });
+
+  const setHours = useCallback((hours: number) => {
+    setCalcState((prev) => ({ ...prev, hours }));
+  }, []);
+
+  const setPlacements = useCallback((placements: number) => {
+    setCalcState((prev) => ({ ...prev, placements }));
+  }, []);
+
+  const setReferrals = useCallback((referrals: number) => {
+    setCalcState((prev) => ({ ...prev, referrals }));
+  }, []);
+
+  const setRefValue = useCallback((refValue: number) => {
+    setCalcState((prev) => ({ ...prev, refValue }));
+  }, []);
 
   // Initial load overlay
   useEffect(() => {
@@ -39,9 +64,42 @@ export default function App() {
     }
   }, [isDarkMode]);
 
+  // Global Keyboard Navigation for the Pitch Funnel (ArrowLeft / ArrowRight)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Do not trigger if typing in form inputs
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      const currentIndex = FUNNEL_STEPS.findIndex((s) => s.id === currentPage);
+      if (currentIndex === -1) return;
+
+      if (e.key === 'ArrowRight' && currentIndex < FUNNEL_STEPS.length - 1) {
+        e.preventDefault();
+        setCurrentPage(FUNNEL_STEPS[currentIndex + 1].id);
+      } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        e.preventDefault();
+        setCurrentPage(FUNNEL_STEPS[currentIndex - 1].id);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage]);
+
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
   const toggleProMode = () => setProMode(!proMode);
-  const toggleLanguage = () => setLanguage(prev => prev === 'nl' ? 'en' : 'nl');
+  const toggleLanguage = () => setLanguage((prev) => (prev === 'nl' ? 'en' : 'nl'));
+
+  const isFunnelPage = FUNNEL_STEPS.some((s) => s.id === currentPage);
 
   const renderPage = () => {
     if (proMode && currentPage === 'pro') {
@@ -57,16 +115,44 @@ export default function App() {
       case 'pitch':
         return <Pitch onNavigate={setCurrentPage} language={language} />;
       case 'basis':
-        return <Basis onNavigate={setCurrentPage} language={language} />;
+        return (
+          <Basis
+            onNavigate={setCurrentPage}
+            language={language}
+            calcState={calcState}
+            setHours={setHours}
+          />
+        );
       case 'bonus':
-        return <Bonus onNavigate={setCurrentPage} language={language} />;
+        return (
+          <Bonus
+            onNavigate={setCurrentPage}
+            language={language}
+            calcState={calcState}
+            setPlacements={setPlacements}
+          />
+        );
       case 'passief':
-        if (!proMode) return <Home onNavigate={setCurrentPage} language={language} />;
-        return <Passief onNavigate={setCurrentPage} proMode={proMode} language={language} />;
+        return (
+          <Passief
+            onNavigate={setCurrentPage}
+            proMode={proMode}
+            language={language}
+            calcState={calcState}
+            setReferrals={setReferrals}
+            setRefValue={setRefValue}
+          />
+        );
       case 'join':
-        return <Join language={language} />;
+        return (
+          <Join
+            language={language}
+            onNavigate={setCurrentPage}
+            calcState={calcState}
+          />
+        );
       case 'pro':
-         return <ProDetail />;
+        return <ProDetail />;
       default:
         return <Home onNavigate={setCurrentPage} language={language} />;
     }
@@ -106,17 +192,21 @@ export default function App() {
           </div>
 
           {/* Tagline */}
-          <p className="load-tagline text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Executie is de sleutel</p>
+          <p className="load-tagline text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">
+            Executie is de sleutel
+          </p>
 
           {/* Progress bar */}
-          <div className="bar"><div className="bar-fill" /></div>
+          <div className="bar">
+            <div className="bar-fill" />
+          </div>
         </div>
       )}
 
-      <div className="min-h-screen bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-slate-200 font-sans selection:bg-cyan-500/30 transition-colors duration-300">
-        <Navbar 
-          currentPage={currentPage} 
-          onNavigate={setCurrentPage} 
+      <div className="min-h-screen bg-slate-50 dark:bg-[#060a12] text-slate-900 dark:text-slate-200 font-sans selection:bg-cyan-500/30 transition-colors duration-300">
+        <Navbar
+          currentPage={currentPage}
+          onNavigate={setCurrentPage}
           proMode={proMode}
           toggleProMode={toggleProMode}
           isDarkMode={isDarkMode}
@@ -124,10 +214,21 @@ export default function App() {
           language={language}
           toggleLanguage={toggleLanguage}
         />
+
+        {/* Funnel Progress bar shown when in pitch flow */}
+        {isFunnelPage && (
+          <FunnelProgress
+            currentPage={currentPage}
+            onNavigate={setCurrentPage}
+            calcState={calcState}
+            language={language}
+          />
+        )}
+
         <main key={currentPage} className="page-transition">
           {renderPage()}
         </main>
-        
+
         {/* Global Background Grid Effect */}
         <div className="fixed inset-0 pointer-events-none z-[-1] opacity-[0.03] bg-grid-pattern" />
       </div>
@@ -145,7 +246,11 @@ export default function App() {
             : 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-indigo-500/30 hover:shadow-indigo-500/50'
         }`}
       >
-        {chatOpen ? <span className="block w-6 h-6 text-center font-bold leading-6">&times;</span> : <MessageCircle className="w-6 h-6" />}
+        {chatOpen ? (
+          <span className="block w-6 h-6 text-center font-bold leading-6">&times;</span>
+        ) : (
+          <MessageCircle className="w-6 h-6" />
+        )}
       </button>
     </>
   );
