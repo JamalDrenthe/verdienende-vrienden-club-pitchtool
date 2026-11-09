@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield, Volume2, VolumeX } from 'lucide-react';
 import { PageView, Language } from '../types';
 import { translations } from '../translations';
 import { sfx } from '../lib/soundFx';
@@ -66,15 +66,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               alt="VVC Logo"
               className="w-9 h-9 rounded-full shadow-[0_0_16px_rgba(230,0,126,0.5)] group-hover:scale-105 transition-transform shrink-0"
             />
-            <div className="flex items-center gap-2">
-              <div className="flex items-center">
-                <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
-                <span className="text-[#e6007e] font-black text-2xl leading-none">.</span>
-              </div>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-[#e6007e]/20 text-[#e6007e] border border-[#e6007e]/40 shadow-sm">
-                <Sparkles className="w-2.5 h-2.5 animate-pulse" />
-                3D SHOW
-              </span>
+            <div className="flex items-center">
+              <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
+              <span className="text-[#e6007e] font-black text-2xl leading-none">.</span>
             </div>
           </div>
 

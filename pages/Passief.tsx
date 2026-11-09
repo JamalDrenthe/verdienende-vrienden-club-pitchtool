@@ -295,7 +295,7 @@ export const Passief: React.FC<PassiefProps> = ({
             <div className="p-6 sm:p-8 border-b border-[#1c1c1c] flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xs font-black uppercase tracking-[0.2em] text-[#e6007e]">3D Live Simulatie</span>
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-[#e6007e]">Live Simulatie</span>
                   <span className="w-2 h-2 rounded-full bg-[#e6007e] animate-ping" />
                 </div>
                 <h3 className="font-black text-xl sm:text-2xl text-white tracking-tight">{t.graphTitle}</h3>
