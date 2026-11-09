@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, Sparkles, Award, TrendingUp } from 'lucide-react';
 import { PageView, Language, CalculatorState } from '../types';
 import { translations } from '../translations';
+import { TiltCard } from '../components/TiltCard';
+import { GameRankBadge } from '../components/GameRankBadge';
+import { sfx } from '../lib/soundFx';
+import { fireConfetti } from '../lib/confetti';
 
 interface BonusProps {
   onNavigate: (page: PageView) => void;
@@ -16,6 +20,7 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
 
   const placements = calcState ? calcState.placements : localPlacements;
   const handlePlacementsChange = (val: number) => {
+    sfx.tick();
     if (setPlacements) setPlacements(val);
     else setLocalPlacements(val);
   };
@@ -32,13 +37,22 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
   const directSubtotal = basisIncome + bonusIncome;
   const grandTotal = directSubtotal + passiveMonthly;
 
+  const handleNextClick = () => {
+    sfx.whoosh();
+    fireConfetti();
+    onNavigate('passief');
+  };
+
   return (
-    <div className="flex-grow px-4 py-12 max-w-6xl mx-auto w-full min-h-[calc(100vh-80px)] bg-[#000000]">
-      <div className="grid md:grid-cols-2 gap-12 items-start">
+    <div className="flex-grow px-4 py-12 max-w-6xl mx-auto w-full min-h-[calc(100vh-80px)] bg-[#000000] relative">
+      {/* 3D Stage Spotlight Effect */}
+      <div className="absolute inset-0 game-spotlight pointer-events-none opacity-30" />
+
+      <div className="grid md:grid-cols-2 gap-12 items-start relative z-10">
         
         {/* Left: Calculator */}
         <div className="order-2 md:order-1 sticky top-32">
-          <div className="bg-[#0a0a0a] border border-[#1f1f1f] rounded-3xl shadow-2xl overflow-hidden">
+          <TiltCard maxTilt={6} glowColor="magenta" className="bg-[#0a0a0a] border border-[#1f1f1f] rounded-3xl shadow-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-[#e6007e] via-[#c00069] to-[#800045] px-6 py-5 text-white">
               <div className="flex items-center justify-between">
                 <div>
@@ -69,7 +83,7 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
                   value={placements} 
                   onChange={(e) => handlePlacementsChange(parseInt(e.target.value) || 0)}
                   aria-label={t.placementsLabel}
-                  className="w-full h-2 bg-[#222222] rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-2.5 bg-[#222222] rounded-lg appearance-none cursor-pointer accent-[#e6007e]"
                 />
                 <div className="flex justify-between text-[11px] text-[#666666] mt-2 font-medium">
                   <span>0 deals</span>
@@ -80,12 +94,17 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
 
               {/* Result Card */}
               <div className="relative bg-[#0d0d0d] border border-[#1f1f1f] p-6 rounded-2xl text-center overflow-hidden mb-5">
-                <div className="absolute top-0 right-0 w-28 h-28 bg-[#e6007e]/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-28 h-28 bg-[#e6007e]/15 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl pointer-events-none" />
                 <p className="text-[#777777] text-[10px] uppercase tracking-[0.25em] font-black mb-1">{t.resultLabel}</p>
-                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
+                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter drop-shadow-[0_0_15px_rgba(230,0,126,0.6)]">
                   €{bonusIncome.toLocaleString('nl-NL')}
                 </p>
                 <p className="text-xs text-[#888888] mt-1 font-medium">{placements} succesvolle plaatsingen × €{bonusRate}/deal</p>
+              </div>
+
+              {/* Gamified Level Rank Badge */}
+              <div className="mb-5">
+                <GameRankBadge monthlyTotal={grandTotal} />
               </div>
 
               {/* Cumulative Subtotal (Pijler 1 + 2) */}
@@ -111,22 +130,25 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
               {/* Navigation CTAs */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => onNavigate('basis')}
-                  className="px-4 py-3.5 rounded-xl border border-[#222222] bg-[#0d0d0d] hover:bg-[#141414] text-white font-bold text-xs flex items-center gap-1 transition-all"
+                  onClick={() => {
+                    sfx.whoosh();
+                    onNavigate('basis');
+                  }}
+                  className="px-4 py-3.5 rounded-xl border border-[#222222] bg-[#0d0d0d] hover:bg-[#141414] text-white font-bold text-xs flex items-center gap-1 transition-all active:scale-95"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">Basis</span>
                 </button>
                 <button 
-                  onClick={() => onNavigate('passief')}
-                  className="group flex-1 py-3.5 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] flex items-center justify-center gap-2 active:scale-95"
+                  onClick={handleNextClick}
+                  className="group flex-1 py-3.5 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] flex items-center justify-center gap-2 active:scale-95 hover:scale-[1.01]"
                 >
                   <span>{t.cta}</span>
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>
-          </div>
+          </TiltCard>
         </div>
 
         {/* Right: Content */}
@@ -143,11 +165,11 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
 
           <div className="space-y-4">
             {t.cards.map((card, idx) => (
-              <div key={idx} className="relative p-5 bg-[#0a0a0a] rounded-2xl border border-[#1c1c1c] hover:border-[#333333] transition-all duration-200 pl-7 shadow-sm">
+              <TiltCard key={idx} maxTilt={4} glowColor="magenta" className="p-5 bg-[#0a0a0a] rounded-2xl border border-[#1c1c1c] pl-7 shadow-sm">
                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#e6007e] rounded-l-2xl shadow-[0_0_10px_rgba(230,0,126,0.5)]" />
                 <h3 className="text-white font-extrabold mb-1 text-sm">{card.title}</h3>
                 <p className="text-xs text-[#888888] leading-relaxed font-medium">{card.text}</p>
-              </div>
+              </TiltCard>
             ))}
           </div>
 

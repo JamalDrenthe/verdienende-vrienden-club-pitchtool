@@ -2,6 +2,8 @@ import React from 'react';
 import { Briefcase, TrendingUp, ChevronRight, Zap } from 'lucide-react';
 import { PageView, Language } from '../types';
 import { translations } from '../translations';
+import { TiltCard } from '../components/TiltCard';
+import { sfx } from '../lib/soundFx';
 
 interface PitchProps {
   onNavigate: (page: PageView) => void;
@@ -14,10 +16,16 @@ export const Pitch: React.FC<PitchProps> = ({ onNavigate, language }) => {
   const t = translations[language].pitch;
   const magenta = "text-transparent bg-clip-text bg-gradient-to-r from-[#e6007e] via-[#ff2a9d] to-[#e6007e]";
 
+  const handleNext = () => {
+    sfx.whoosh();
+    onNavigate('basis');
+  };
+
   return (
     <div className="flex-grow flex items-center justify-center px-4 py-16 min-h-[calc(100vh-80px)] relative overflow-hidden bg-[#000000]">
-      {/* VVC Ambient glow */}
+      {/* VVC Ambient glow & Game Spotlight */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#e6007e]/8 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute inset-0 game-spotlight pointer-events-none opacity-30" />
 
       <div className="max-w-5xl w-full text-center relative z-10">
         {/* Badge */}
@@ -37,23 +45,25 @@ export const Pitch: React.FC<PitchProps> = ({ onNavigate, language }) => {
           {t.cards.map((card, idx) => {
             const Icon = icons[idx];
             return (
-              <div 
-                key={card.num} 
-                className="group relative p-6 bg-[#0a0a0a] rounded-2xl border border-[#1c1c1c] hover:border-[#e6007e]/50 transition-all duration-300 shadow-sm hover:shadow-[0_8px_32px_-8px_rgba(230,0,126,0.35)] hover:-translate-y-1"
+              <TiltCard
+                key={card.num}
+                maxTilt={8}
+                glowColor="magenta"
+                className="group relative p-6 bg-[#0a0a0a] rounded-2xl border border-[#1c1c1c] shadow-sm hover:shadow-[0_8px_32px_-8px_rgba(230,0,126,0.4)]"
               >
-                <span className="absolute top-4 right-4 text-[10px] font-black tracking-[0.2em] text-[#e6007e] opacity-60">{card.num}</span>
-                <div className="w-11 h-11 bg-[#e6007e]/10 border border-[#e6007e]/25 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#e6007e] transition-colors">
+                <span className="absolute top-4 right-4 text-[10px] font-black tracking-[0.2em] text-[#e6007e] opacity-80">{card.num}</span>
+                <div className="w-12 h-12 bg-[#e6007e]/10 border border-[#e6007e]/25 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#e6007e] transition-colors shadow-inner">
                   <Icon className="text-[#e6007e] group-hover:text-white w-5 h-5 transition-colors" />
                 </div>
                 <h3 className="text-lg font-extrabold text-white mb-2">{card.title}</h3>
                 <p className="text-[#888888] text-sm leading-relaxed font-medium">{card.desc}</p>
-              </div>
+              </TiltCard>
             );
           })}
         </div>
 
         <button 
-          onClick={() => onNavigate('basis')}
+          onClick={handleNext}
           className="group inline-flex items-center gap-2 px-10 py-4 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-full font-black text-sm uppercase tracking-wider shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
         >
           <span>{t.cta}</span>

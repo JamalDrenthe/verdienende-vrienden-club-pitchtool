@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, Sparkles, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { PageView, Language, CalculatorState } from '../types';
 import { translations } from '../translations';
+import { TiltCard } from '../components/TiltCard';
+import { GameRankBadge } from '../components/GameRankBadge';
+import { sfx } from '../lib/soundFx';
+import { fireConfetti } from '../lib/confetti';
 
 interface BasisProps {
   onNavigate: (page: PageView) => void;
@@ -16,6 +20,7 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
   
   const hours = calcState ? calcState.hours : localHours;
   const handleHoursChange = (val: number) => {
+    sfx.tick();
     if (setHours) setHours(val);
     else setLocalHours(val);
   };
@@ -31,9 +36,18 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
   const passiveMonthly = referrals * refValue;
   const grandTotal = income + bonusIncome + passiveMonthly;
 
+  const handleNextClick = () => {
+    sfx.whoosh();
+    fireConfetti();
+    onNavigate('bonus');
+  };
+
   return (
-    <div className="flex-grow px-4 py-12 max-w-6xl mx-auto w-full min-h-[calc(100vh-80px)] bg-[#000000]">
-      <div className="grid md:grid-cols-2 gap-12 items-start">
+    <div className="flex-grow px-4 py-12 max-w-6xl mx-auto w-full min-h-[calc(100vh-80px)] bg-[#000000] relative">
+      {/* 3D Stage Spotlight Effect */}
+      <div className="absolute inset-0 game-spotlight pointer-events-none opacity-30" />
+
+      <div className="grid md:grid-cols-2 gap-12 items-start relative z-10">
         
         {/* Left: Content */}
         <div>
@@ -49,15 +63,17 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
           
           <div className="space-y-4">
             {t.steps.map((step) => (
-              <div key={step.num} className="group flex gap-4 p-5 bg-[#0a0a0a] rounded-2xl border border-[#1c1c1c] hover:border-[#333333] transition-all duration-200 shadow-sm">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e6007e] flex items-center justify-center text-white font-black text-xs shadow-md shadow-[#e6007e]/30">
-                  {step.num}
+              <TiltCard key={step.num} maxTilt={4} glowColor="magenta" className="p-5 bg-[#0a0a0a] rounded-2xl border border-[#1c1c1c] shadow-sm">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e6007e] flex items-center justify-center text-white font-black text-xs shadow-md shadow-[#e6007e]/30">
+                    {step.num}
+                  </div>
+                  <div>
+                    <h3 className="text-white font-extrabold mb-1 text-sm">{step.title}</h3>
+                    <p className="text-xs text-[#888888] leading-relaxed font-medium">{step.text}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-white font-extrabold mb-1 text-sm">{step.title}</h3>
-                  <p className="text-xs text-[#888888] leading-relaxed font-medium">{step.text}</p>
-                </div>
-              </div>
+              </TiltCard>
             ))}
           </div>
 
@@ -73,7 +89,7 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
 
         {/* Right: Calculator */}
         <div className="sticky top-32">
-          <div className="bg-[#0a0a0a] border border-[#1f1f1f] rounded-3xl shadow-2xl overflow-hidden">
+          <TiltCard maxTilt={6} glowColor="magenta" className="bg-[#0a0a0a] border border-[#1f1f1f] rounded-3xl shadow-2xl overflow-hidden">
             {/* Calculator Header */}
             <div className="bg-gradient-to-r from-[#e6007e] via-[#c00069] to-[#800045] px-6 py-5 text-white">
               <div className="flex items-center justify-between">
@@ -106,7 +122,7 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
                   value={hours} 
                   onChange={(e) => handleHoursChange(parseInt(e.target.value) || 0)}
                   aria-label={t.hoursLabel}
-                  className="w-full h-2 bg-[#222222] rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-2.5 bg-[#222222] rounded-lg appearance-none cursor-pointer accent-[#e6007e]"
                 />
                 <div className="flex justify-between text-[11px] text-[#666666] mt-2 font-medium">
                   <span>0 uur</span>
@@ -117,12 +133,17 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
 
               {/* Result Card */}
               <div className="relative bg-[#0d0d0d] border border-[#1f1f1f] p-6 rounded-2xl text-center overflow-hidden mb-5">
-                <div className="absolute top-0 right-0 w-28 h-28 bg-[#e6007e]/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-28 h-28 bg-[#e6007e]/15 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl pointer-events-none" />
                 <p className="text-[#777777] text-[10px] uppercase tracking-[0.25em] font-black mb-1">{t.resultLabel}</p>
-                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
+                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter drop-shadow-[0_0_15px_rgba(230,0,126,0.6)]">
                   €{income.toLocaleString('nl-NL')}
                 </p>
                 <p className="text-xs text-[#888888] mt-1 font-medium">{hours} uur × €{hourlyRate}/uur basis per maand</p>
+              </div>
+
+              {/* Gamified Level Rank Badge */}
+              <div className="mb-5">
+                <GameRankBadge monthlyTotal={grandTotal} />
               </div>
 
               {/* Cumulative Combined Projection Bar */}
@@ -148,22 +169,25 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
               {/* Navigation CTAs */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => onNavigate('pitch')}
-                  className="px-4 py-3.5 rounded-xl border border-[#222222] bg-[#0d0d0d] hover:bg-[#141414] text-white font-bold text-xs flex items-center gap-1 transition-all"
+                  onClick={() => {
+                    sfx.whoosh();
+                    onNavigate('pitch');
+                  }}
+                  className="px-4 py-3.5 rounded-xl border border-[#222222] bg-[#0d0d0d] hover:bg-[#141414] text-white font-bold text-xs flex items-center gap-1 transition-all active:scale-95"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">Intro</span>
                 </button>
                 <button 
-                  onClick={() => onNavigate('bonus')}
-                  className="group flex-1 py-3.5 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] flex items-center justify-center gap-2 active:scale-95"
+                  onClick={handleNextClick}
+                  className="group flex-1 py-3.5 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] flex items-center justify-center gap-2 active:scale-95 hover:scale-[1.01]"
                 >
                   <span>{t.cta}</span>
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>
-          </div>
+          </TiltCard>
         </div>
       </div>
     </div>

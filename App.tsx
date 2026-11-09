@@ -220,7 +220,7 @@ export default function App() {
           />
         )}
 
-        <main key={currentPage} className="page-transition">
+        <main key={currentPage} className="page-transition page-3d-enter">
           {renderPage()}
         </main>
 

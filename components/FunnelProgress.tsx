@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Check, Sparkles, HelpCircle } from 'lucide-react';
 import { PageView, Language, CalculatorState } from '../types';
+import { sfx } from '../lib/soundFx';
 
 interface FunnelProgressProps {
   currentPage: PageView;
@@ -46,7 +47,12 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
           {/* Left: Previous Arrow + Step Badge */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => prevStep && onNavigate(prevStep.id)}
+              onClick={() => {
+                if (prevStep) {
+                  sfx.whoosh();
+                  onNavigate(prevStep.id);
+                }
+              }}
               disabled={!prevStep}
               title={prevStep ? `Vorige stap (←): ${prevStep.labelNl}` : 'Eerste stap'}
               className={`p-2 rounded-xl transition-all duration-200 flex items-center justify-center ${
@@ -76,7 +82,10 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
               return (
                 <button
                   key={step.id}
-                  onClick={() => onNavigate(step.id)}
+                  onClick={() => {
+                    sfx.whoosh();
+                    onNavigate(step.id);
+                  }}
                   className={`group relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
                     isActive
                       ? 'bg-[#e6007e] text-white shadow-[0_4px_24px_rgba(230,0,126,0.45)] scale-105'
@@ -130,7 +139,12 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
 
             {/* Next Arrow */}
             <button
-              onClick={() => nextStep && onNavigate(nextStep.id)}
+              onClick={() => {
+                if (nextStep) {
+                  sfx.whoosh();
+                  onNavigate(nextStep.id);
+                }
+              }}
               disabled={!nextStep}
               title={nextStep ? `Volgende stap (→): ${nextStep.labelNl}` : 'Laatste stap'}
               className={`p-2 rounded-xl transition-all duration-200 flex items-center justify-center ${
