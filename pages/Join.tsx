@@ -34,10 +34,10 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Projections
-  const hours = calcState ? calcState.hours : 40;
-  const placements = calcState ? calcState.placements : 5;
-  const referrals = calcState ? calcState.referrals : 120;
+  // Projections - default to 0
+  const hours = calcState ? calcState.hours : 0;
+  const placements = calcState ? calcState.placements : 0;
+  const referrals = calcState ? calcState.referrals : 0;
   const refValue = calcState ? calcState.refValue : 25;
   const basisIncome = hours * 30;
   const bonusIncome = placements * 300;

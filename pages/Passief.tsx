@@ -20,7 +20,7 @@ export const Passief: React.FC<PassiefProps> = ({
   setReferrals,
 }) => {
   const t = translations[language].passief;
-  const [localReferrals, setLocalReferrals] = useState(120);
+  const [localReferrals, setLocalReferrals] = useState(0);
   const [useMining, setUseMining] = useState(false);
   const [useEstate, setUseEstate] = useState(false);
   const [years, setYears] = useState<1 | 3 | 5>(1);
@@ -61,9 +61,9 @@ export const Passief: React.FC<PassiefProps> = ({
   const lastMonthTotal = data[data.length - 1].Totaal;
   const periodTotal = data.reduce((sum, d) => sum + d.Totaal, 0);
 
-  // Cumulative Grand Total
-  const hours = calcState ? calcState.hours : 40;
-  const placements = calcState ? calcState.placements : 5;
+  // Cumulative Grand Total - default to 0
+  const hours = calcState ? calcState.hours : 0;
+  const placements = calcState ? calcState.placements : 0;
   const basisIncome = hours * 30;
   const bonusIncome = placements * 300;
   const passiveMonthly = totalReferrals * refValue;

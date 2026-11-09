@@ -12,7 +12,7 @@ interface BasisProps {
 
 export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, setHours }) => {
   const t = translations[language].basis;
-  const [localHours, setLocalHours] = useState(40);
+  const [localHours, setLocalHours] = useState(0);
   
   const hours = calcState ? calcState.hours : localHours;
   const handleHoursChange = (val: number) => {
@@ -23,9 +23,9 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
   const hourlyRate = 30;
   const income = hours * hourlyRate;
 
-  // Cumulative metrics
-  const placements = calcState ? calcState.placements : 5;
-  const referrals = calcState ? calcState.referrals : 120;
+  // Cumulative metrics - default to 0
+  const placements = calcState ? calcState.placements : 0;
+  const referrals = calcState ? calcState.referrals : 0;
   const refValue = 25;
   const bonusIncome = placements * 300;
   const passiveMonthly = referrals * refValue;

@@ -22,11 +22,11 @@ export default function App() {
   const [fadeOut, setFadeOut] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
 
-  // Cumulative Calculator State across all slides
+  // Cumulative Calculator State across all slides - starts at 0
   const [calcState, setCalcState] = useState<CalculatorState>({
-    hours: 40,
-    placements: 5,
-    referrals: 120,
+    hours: 0,
+    placements: 0,
+    referrals: 0,
     refValue: 25,
   });
 

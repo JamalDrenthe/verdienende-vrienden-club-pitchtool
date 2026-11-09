@@ -12,7 +12,7 @@ interface BonusProps {
 
 export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, setPlacements }) => {
   const t = translations[language].bonus;
-  const [localPlacements, setLocalPlacements] = useState(5);
+  const [localPlacements, setLocalPlacements] = useState(0);
 
   const placements = calcState ? calcState.placements : localPlacements;
   const handlePlacementsChange = (val: number) => {
@@ -23,9 +23,9 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
   const bonusRate = 300;
   const bonusIncome = placements * bonusRate;
 
-  // Cumulative metrics
-  const hours = calcState ? calcState.hours : 40;
-  const referrals = calcState ? calcState.referrals : 120;
+  // Cumulative metrics - default to 0
+  const hours = calcState ? calcState.hours : 0;
+  const referrals = calcState ? calcState.referrals : 0;
   const refValue = 25;
   const basisIncome = hours * 30;
   const passiveMonthly = referrals * refValue;
