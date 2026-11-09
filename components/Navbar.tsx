@@ -87,13 +87,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={item.id}
                     onClick={() => onNavigate(item.id as PageView)}
-                    className={`relative px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
+                    className={`relative px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
                       isActive
-                        ? 'bg-slate-100 dark:bg-[#111111] text-[#e6007e] dark:text-white shadow-sm border border-slate-200/80 dark:border-[#e6007e]/40 shadow-[0_0_15px_rgba(230,0,126,0.15)]'
-                        : 'text-slate-500 dark:text-[#888888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111111]'
+                        ? 'bg-slate-100 dark:bg-[#141414] text-[#e6007e] dark:text-white shadow-sm border border-slate-200/80 dark:border-[#e6007e]/60 shadow-[0_0_20px_rgba(230,0,126,0.25)]'
+                        : 'text-slate-600 dark:text-[#a1a1aa] hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#121212]'
                     }`}
                   >
-                    <item.icon className={`h-4 w-4 ${isActive ? 'text-[#e6007e]' : 'text-slate-400 dark:text-[#666666]'}`} />
+                    <item.icon className={`h-4 w-4 ${isActive ? 'text-[#e6007e]' : 'text-slate-400 dark:text-[#a1a1aa]'}`} />
                     {item.label}
                   </button>
                 );

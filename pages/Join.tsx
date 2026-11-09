@@ -8,7 +8,7 @@ import { GameRankBadge } from '../components/GameRankBadge';
 import { sfx } from '../lib/soundFx';
 import { fireJackpotCelebration, fireConfetti } from '../lib/confetti';
 
-const inputBase = "w-full bg-[#050505] border border-[#222222] rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e6007e]/40 focus:border-[#e6007e] placeholder-[#555555] transition-all duration-200 font-medium";
+const inputBase = "w-full bg-[#080808] border border-[#262626] rounded-2xl px-4 py-3.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e6007e]/50 focus:border-[#e6007e] placeholder-[#a1a1aa] transition-all duration-200 font-medium shadow-inner";
 
 interface JoinProps {
   language: Language;

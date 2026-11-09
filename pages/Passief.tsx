@@ -82,106 +82,106 @@ export const Passief: React.FC<PassiefProps> = ({
   };
 
   return (
-    <div className="flex-grow px-4 py-12 max-w-7xl mx-auto w-full bg-[#000000] relative">
+    <div className="flex-grow px-4 sm:px-6 py-12 max-w-7xl mx-auto w-full bg-[#000000] relative">
       {/* 3D Stage Spotlight Effect */}
-      <div className="absolute inset-0 game-spotlight pointer-events-none opacity-40" />
+      <div className="absolute inset-0 game-spotlight pointer-events-none opacity-35" />
 
-      {/* Header */}
-      <div className="text-center mb-8 relative z-10">
-        <div className="inline-flex items-center gap-2 bg-[#0d0d0d] border border-[#222222] rounded-full px-4 py-1.5 text-[10px] font-black text-white tracking-[0.25em] uppercase mb-4 shadow-[0_0_20px_rgba(230,0,126,0.2)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#e6007e] animate-pulse" />
+      {/* Symmetrical Header */}
+      <div className="text-center mb-10 relative z-10 max-w-3xl mx-auto">
+        <div className="inline-flex items-center gap-2.5 bg-[#0d0d0d] border border-[#222222] rounded-full px-4 py-1.5 text-[11px] font-black text-white tracking-[0.25em] uppercase mb-4 shadow-[0_0_20px_rgba(230,0,126,0.25)]">
+          <span className="w-2 h-2 rounded-full bg-[#e6007e] animate-pulse" />
           {t.badge}
         </div>
-        <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">
+        <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-[1.1] text-balance">
           {t.titlePrefix}<span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#ff2a9d] to-[#e6007e]">{t.titleHighlight}</span>{t.titleSuffix}
         </h2>
-        <p className="text-[#888888] mt-3 text-sm max-w-lg mx-auto leading-relaxed font-medium">{t.subtitle}</p>
+        <p className="text-[#d4d4d8] mt-3.5 text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-normal text-balance">{t.subtitle}</p>
       </div>
 
-      {/* Unified Cumulative Bar Across 3 Pillars — Brutalist Terminal Style */}
-      <TiltCard maxTilt={4} glowColor="magenta" className="mb-8 rounded-3xl bg-[#0a0a0a] border border-[#1f1f1f] shadow-2xl relative overflow-hidden">
+      {/* Unified Cumulative Bar Across 3 Pillars — Symmetrical Terminal Banner */}
+      <TiltCard maxTilt={4} glowColor="magenta" className="mb-10 rounded-3xl bg-[#0a0a0a] border border-[#222222] shadow-2xl relative overflow-hidden">
         <div className="p-6 sm:p-8">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#e6007e]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#e6007e]/12 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#e6007e] flex items-center justify-center text-white shadow-lg shadow-[#e6007e]/30 shrink-0">
+            <div className="flex items-center gap-4 text-center lg:text-left">
+              <div className="w-14 h-14 rounded-2xl bg-[#e6007e] flex items-center justify-center text-white shadow-lg shadow-[#e6007e]/35 shrink-0">
                 <Layers className="w-7 h-7" />
               </div>
               <div>
-                <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#e6007e] mb-1">
+                <div className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#e6007e] mb-1">
                   <Sparkles className="w-3.5 h-3.5 text-[#e6007e] animate-pulse" />
                   De 3 Pijlers Gecombineerd
                 </div>
-                <h3 className="text-lg font-black text-white">Totale Maandelijkse Cashflow</h3>
-                <p className="text-xs text-[#888888] font-medium">
+                <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">Totale Maandelijkse Cashflow</h3>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] font-medium mt-0.5">
                   Basis (€{basisIncome}) + Bonus (€{bonusIncome}) + Passief (€{passiveMonthly})
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 justify-center lg:justify-end">
+            <div className="flex flex-wrap items-center gap-6 sm:gap-8 justify-center lg:justify-end">
               <div className="text-center sm:text-right">
-                <p className="text-[10px] text-[#777777] uppercase font-black tracking-[0.2em]">Geschat Maandinkomen</p>
-                <p className="text-3xl sm:text-4xl font-black text-white tracking-tighter">
+                <p className="text-[11px] text-[#a1a1aa] uppercase font-black tracking-[0.2em]">Geschat Maandinkomen</p>
+                <p className="text-3xl sm:text-4xl font-black text-white tracking-tighter tabular-nums drop-shadow-sm">
                   €{grandTotal.toLocaleString('nl-NL')}
-                  <span className="text-sm font-semibold text-[#888888] ml-1">/mnd</span>
+                  <span className="text-xs sm:text-sm font-semibold text-[#a1a1aa] ml-1">/mnd</span>
                 </p>
               </div>
-              <div className="h-10 w-px bg-[#222222] hidden sm:block" />
+              <div className="h-12 w-px bg-[#262626] hidden sm:block" />
               <div className="text-center sm:text-right">
-                <p className="text-[10px] text-[#e6007e] uppercase font-black tracking-[0.2em]">Jaarbasis Prognose</p>
-                <p className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-[#ff47ab] tracking-tighter">
+                <p className="text-[11px] text-[#e6007e] uppercase font-black tracking-[0.2em]">Jaarbasis Prognose</p>
+                <p className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#ff2a9d] to-[#e6007e] tracking-tighter tabular-nums">
                   €{annualTotal.toLocaleString('nl-NL')}
-                  <span className="text-sm font-semibold text-[#888888] ml-1">/jaar</span>
+                  <span className="text-xs sm:text-sm font-semibold text-[#a1a1aa] ml-1">/jaar</span>
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Gamified Level Rank Badge */}
-          <div className="mt-5 pt-5 border-t border-[#1a1a1a]">
+          {/* Gamified Level Rank Badge — Symmetrical */}
+          <div className="mt-6 pt-6 border-t border-[#1c1c1c]">
             <GameRankBadge monthlyTotal={grandTotal} />
           </div>
         </div>
       </TiltCard>
 
-      <div className="grid lg:grid-cols-3 gap-6 relative z-10">
+      <div className="grid lg:grid-cols-3 gap-8 relative z-10 items-stretch">
         
         {/* Column 1: Config (Pijler 3 Calculator) */}
-        <TiltCard maxTilt={5} glowColor="magenta" className="bg-[#0a0a0a] border border-[#1f1f1f] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between">
+        <TiltCard maxTilt={5} glowColor="magenta" className="bg-[#0a0a0a] border border-[#222222] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between h-full">
           <div>
-            <div className="bg-gradient-to-r from-[#e6007e] via-[#c00069] to-[#800045] px-6 py-5 text-white">
+            <div className="bg-gradient-to-r from-[#e6007e] via-[#c00069] to-[#800045] px-6 sm:px-8 py-5 text-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-black text-lg tracking-tight">{t.portfolioTitle}</h3>
-                  <p className="text-white/80 text-xs mt-0.5">{t.portfolioSubtitle}</p>
+                  <h3 className="font-black text-xl tracking-tight">{t.portfolioTitle}</h3>
+                  <p className="text-white/85 text-xs sm:text-sm mt-0.5">{t.portfolioSubtitle}</p>
                 </div>
-                <span className="bg-black/30 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
+                <span className="bg-black/35 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
                   Pijler 3
                 </span>
               </div>
             </div>
 
-            <div className="p-5 space-y-4">
+            <div className="p-6 space-y-5">
               {/* Program 1: Referral */}
-              <div className="p-4 bg-[#0d0d0d] rounded-2xl border border-[#1c1c1c] shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-bold text-white flex items-center text-sm">
-                    <Users size={15} className="mr-2 text-[#e6007e]"/> {t.referralTitle}
+              <div className="p-5 bg-[#0d0d0d] rounded-2xl border border-[#222222] shadow-md">
+                <div className="flex items-center justify-between mb-2.5">
+                  <h4 className="font-bold text-white flex items-center text-sm sm:text-base">
+                    <Users size={16} className="mr-2 text-[#e6007e]"/> {t.referralTitle}
                   </h4>
-                  {/* Top-right prominent total calculation badge */}
-                  <span className="text-[11px] font-black bg-[#e6007e]/20 text-white px-2.5 py-1 rounded-full border border-[#e6007e]/40 shadow-sm flex items-center gap-1">
-                    <span className="text-[#888888]">{totalReferrals} × €{refValue}</span>
+                  {/* Top-Right Calculation Badge */}
+                  <span className="text-xs font-black bg-[#e6007e]/20 text-white px-3 py-1 rounded-full border border-[#e6007e]/40 shadow-sm flex items-center gap-1.5 tabular-nums">
+                    <span className="text-[#a1a1aa]">{totalReferrals} × €{refValue}</span>
                     <span className="text-[#e6007e] font-black">= €{(totalReferrals * refValue).toLocaleString('nl-NL')}/mnd</span>
                   </span>
                 </div>
-                <p className="text-[11px] text-[#777777] mb-3 font-medium">{t.referralDesc}</p>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] mb-4 font-normal leading-relaxed">{t.referralDesc}</p>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
-                    <div className="flex justify-between items-baseline mb-1">
-                      <label htmlFor="passief-candidates-slider" className="text-[10px] text-[#888888] font-black uppercase tracking-wider">{t.candidatesLabel}</label>
-                      <span className="text-white font-black text-base">{totalReferrals}</span>
+                    <div className="flex justify-between items-baseline mb-2">
+                      <label htmlFor="passief-candidates-slider" className="text-xs text-[#a1a1aa] font-black uppercase tracking-wider">{t.candidatesLabel}</label>
+                      <span className="text-white font-black text-lg tabular-nums">{totalReferrals}</span>
                     </div>
                     <input 
                       id="passief-candidates-slider"
@@ -193,48 +193,48 @@ export const Passief: React.FC<PassiefProps> = ({
                     />
                   </div>
                   
-                  {/* Vast Bedrag per Kandidaat (Vastgezet op €25/mnd, mag niet aangepast worden) */}
-                  <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
+                  {/* Vast Bedrag per Kandidaat (Vastgezet op €25/mnd) */}
+                  <div className="p-4 rounded-xl bg-[#0a0a0a] border border-[#222222] flex items-center justify-between">
+                    <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-[#e6007e]/15 text-[#e6007e] flex items-center justify-center shrink-0 border border-[#e6007e]/30">
                         <Lock className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-white">Bedrag per Kandidaat</span>
-                          <span className="text-[9px] uppercase tracking-wider font-black bg-[#e6007e]/20 text-[#e6007e] px-1.5 py-0.5 rounded">Vast</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs sm:text-sm font-bold text-white">Bedrag per Kandidaat</span>
+                          <span className="text-[10px] uppercase tracking-wider font-black bg-[#e6007e]/25 text-[#e6007e] px-2 py-0.5 rounded">Vast</span>
                         </div>
-                        <p className="text-[10px] text-[#777777]">Vaste maandelijkse commissie</p>
+                        <p className="text-xs text-[#a1a1aa]">Vaste maandelijkse commissie</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-lg font-black text-white">€25</span>
-                      <span className="text-[10px] text-[#777777] font-medium ml-0.5">/mnd</span>
+                      <span className="text-lg sm:text-xl font-black text-white tabular-nums">€25</span>
+                      <span className="text-xs text-[#a1a1aa] font-medium ml-1">/mnd</span>
                     </div>
                   </div>
 
-                  {/* PROMINENT TOTAAL BEDRAG PASSIEF INKOMEN (Groot, Duidelijk, Game-Show Highlight) */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#161616] via-[#0d0d0d] to-[#080808] border-2 border-[#e6007e] shadow-[0_0_30px_rgba(230,0,126,0.3)] relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#e6007e]/20 rounded-full blur-2xl pointer-events-none" />
+                  {/* PROMINENT TOTAAL BEDRAG PASSIEF INKOMEN (Symmetrisch & Kristalhelder) */}
+                  <div className="p-5 rounded-2xl bg-gradient-to-br from-[#161616] via-[#0d0d0d] to-[#080808] border-2 border-[#e6007e] shadow-[0_0_30px_rgba(230,0,126,0.3)] relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-36 h-36 bg-[#e6007e]/20 rounded-full blur-2xl pointer-events-none" />
                     
                     <div className="relative z-10 flex items-center justify-between gap-4">
                       <div>
-                        <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.25em] text-[#e6007e] mb-1">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#e6007e] mb-1">
                           <Sparkles className="w-3.5 h-3.5 text-[#e6007e] animate-pulse" />
                           Totaal Passief Inkomen
                         </div>
-                        <p className="text-xs text-[#888888] font-medium">
+                        <p className="text-xs sm:text-sm text-[#d4d4d8] font-medium">
                           {totalReferrals} {totalReferrals === 1 ? 'kandidaat' : 'kandidaten'} × €25,- /mnd
                         </p>
                       </div>
 
                       <div className="text-right">
-                        <div className="text-3xl sm:text-4xl font-black text-white tracking-tighter drop-shadow-[0_0_15px_rgba(230,0,126,0.7)]">
+                        <div className="text-3xl sm:text-4xl font-black text-white tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(230,0,126,0.7)]">
                           €{(totalReferrals * refValue).toLocaleString('nl-NL')}
                           <span className="text-xs sm:text-sm font-bold text-[#e6007e] ml-1">/mnd</span>
                         </div>
-                        <div className="text-xs font-black text-[#ff47ab] mt-0.5 tracking-tight">
-                          = €{((totalReferrals * refValue) * 12).toLocaleString('nl-NL')} <span className="text-[10px] text-[#888888] font-normal">/jaar</span>
+                        <div className="text-xs sm:text-sm font-black text-[#ff47ab] mt-0.5 tracking-tight tabular-nums">
+                          = €{((totalReferrals * refValue) * 12).toLocaleString('nl-NL')} <span className="text-[10px] text-[#a1a1aa] font-normal">/jaar</span>
                         </div>
                       </div>
                     </div>
@@ -244,44 +244,44 @@ export const Passief: React.FC<PassiefProps> = ({
 
               {/* Program 2: Mining */}
               <div 
-                className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${useMining ? 'bg-purple-950/20 border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.2)]' : 'bg-[#0d0d0d] border-[#1c1c1c] hover:border-[#333333]'}`}
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 ${useMining ? 'bg-purple-950/20 border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.25)]' : 'bg-[#0d0d0d] border-[#222222] hover:border-[#333333]'}`}
                 onClick={() => {
                   sfx.click();
                   setUseMining(!useMining);
                 }}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-bold text-white flex items-center text-sm">
-                    <Server size={15} className="mr-2 text-purple-400"/> {t.miningTitle}
+                  <h4 className="font-bold text-white flex items-center text-sm sm:text-base">
+                    <Server size={16} className="mr-2 text-purple-400"/> {t.miningTitle}
                   </h4>
-                  <span className="text-[10px] font-black bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full">€50 p/m</span>
+                  <span className="text-[11px] font-black bg-purple-500/15 text-purple-300 px-2.5 py-0.5 rounded-full border border-purple-500/30">€50 p/m</span>
                 </div>
-                <p className="text-[11px] text-[#777777] mb-1 font-medium">{t.miningDesc1}</p>
-                <p className="text-[11px] text-[#777777] mb-3 font-medium">{t.miningDesc2}</p>
-                <div className={`flex items-center justify-center gap-2 w-full py-2 rounded-xl text-xs font-black transition-all ${useMining ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20' : 'bg-[#1a1a1a] text-[#888888]'}`}>
-                  {useMining && <Check size={14} />}
+                <p className="text-xs sm:text-sm text-[#a1a1aa] mb-1 font-normal">{t.miningDesc1}</p>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] mb-3.5 font-normal">{t.miningDesc2}</p>
+                <div className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${useMining ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25' : 'bg-[#181818] text-[#a1a1aa] hover:text-white'}`}>
+                  {useMining && <Check size={15} />}
                   {useMining ? t.active : t.activate}
                 </div>
               </div>
 
               {/* Program 3: Real Estate */}
               <div 
-                className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${useEstate ? 'bg-emerald-950/20 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-[#0d0d0d] border-[#1c1c1c] hover:border-[#333333]'}`}
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 ${useEstate ? 'bg-emerald-950/20 border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.25)]' : 'bg-[#0d0d0d] border-[#222222] hover:border-[#333333]'}`}
                 onClick={() => {
                   sfx.click();
                   setUseEstate(!useEstate);
                 }}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-bold text-white flex items-center text-sm">
-                    <HomeIcon size={15} className="mr-2 text-emerald-400"/> {t.estateTitle}
+                  <h4 className="font-bold text-white flex items-center text-sm sm:text-base">
+                    <HomeIcon size={16} className="mr-2 text-emerald-400"/> {t.estateTitle}
                   </h4>
-                  <span className="text-[10px] font-black bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full">€50 p/m</span>
+                  <span className="text-[11px] font-black bg-emerald-500/15 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">€50 p/m</span>
                 </div>
-                <p className="text-[11px] text-[#777777] mb-1 font-medium">{t.estateDesc1}</p>
-                <p className="text-[11px] text-[#777777] mb-3 font-medium">{t.estateDesc2}</p>
-                <div className={`flex items-center justify-center gap-2 w-full py-2 rounded-xl text-xs font-black transition-all ${useEstate ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/20' : 'bg-[#1a1a1a] text-[#888888]'}`}>
-                  {useEstate && <Check size={14} />}
+                <p className="text-xs sm:text-sm text-[#a1a1aa] mb-1 font-normal">{t.estateDesc1}</p>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] mb-3.5 font-normal">{t.estateDesc2}</p>
+                <div className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${useEstate ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/25' : 'bg-[#181818] text-[#a1a1aa] hover:text-white'}`}>
+                  {useEstate && <Check size={15} />}
                   {useEstate ? t.active : t.activate}
                 </div>
               </div>
@@ -289,19 +289,19 @@ export const Passief: React.FC<PassiefProps> = ({
           </div>
         </TiltCard>
 
-        {/* Column 2 & 3: Visualizer & Simulation */}
-        <TiltCard maxTilt={4} glowColor="magenta" className="lg:col-span-2 bg-[#0a0a0a] border border-[#1f1f1f] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between">
+        {/* Column 2 & 3: Visualizer & Simulation (Symmetrical & High Contrast) */}
+        <TiltCard maxTilt={4} glowColor="magenta" className="lg:col-span-2 bg-[#0a0a0a] border border-[#222222] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between h-full">
           <div>
-            <div className="p-6 border-b border-[#1a1a1a] flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div className="p-6 sm:p-8 border-b border-[#1c1c1c] flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e6007e]">3D Live Simulatie</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#e6007e] animate-ping" />
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-[#e6007e]">3D Live Simulatie</span>
+                  <span className="w-2 h-2 rounded-full bg-[#e6007e] animate-ping" />
                 </div>
-                <h3 className="font-black text-xl text-white">{t.graphTitle}</h3>
-                <p className="text-xs text-[#888888] font-medium">{t.graphSubtitle}</p>
+                <h3 className="font-black text-xl sm:text-2xl text-white tracking-tight">{t.graphTitle}</h3>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] font-normal">{t.graphSubtitle}</p>
               </div>
-              <div className="flex bg-[#0d0d0d] rounded-xl p-1 border border-[#1f1f1f]">
+              <div className="flex bg-[#0d0d0d] rounded-2xl p-1.5 border border-[#222222]">
                 {([1, 3, 5] as const).map((y) => (
                   <button
                     key={y}
@@ -309,10 +309,10 @@ export const Passief: React.FC<PassiefProps> = ({
                       sfx.click();
                       setYears(y);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                       years === y
-                        ? 'bg-[#e6007e] text-white shadow-sm'
-                        : 'text-[#666666] hover:text-white'
+                        ? 'bg-[#e6007e] text-white shadow-md shadow-[#e6007e]/35'
+                        : 'text-[#a1a1aa] hover:text-white'
                     }`}
                   >
                     {y} {t.yearLabel}
@@ -321,16 +321,20 @@ export const Passief: React.FC<PassiefProps> = ({
               </div>
             </div>
 
-            <div className="px-6 pt-4 flex items-end gap-6 justify-end">
+            <div className="px-6 sm:px-8 pt-6 flex items-end gap-8 justify-end">
               <div className="text-right">
-                <p className="text-[10px] text-[#777777] uppercase tracking-[0.2em] font-black">{t.totalReceived}</p>
-                <p className="text-2xl font-black text-white tracking-tighter">€{periodTotal.toLocaleString()}</p>
-                <p className="text-[10px] text-[#666666] mt-0.5">{t.overMonths} {totalMonths} {t.months12.split(' ')[1]}</p>
+                <p className="text-xs text-[#a1a1aa] uppercase tracking-[0.2em] font-black">{t.totalReceived}</p>
+                <p className="text-2xl sm:text-3xl font-black text-white tracking-tighter tabular-nums drop-shadow-sm">
+                  €{periodTotal.toLocaleString()}
+                </p>
+                <p className="text-xs text-[#a1a1aa] mt-0.5">{t.overMonths} {totalMonths} {t.months12.split(' ')[1]}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] text-[#777777] uppercase tracking-[0.2em] font-black">{t.month} {totalMonths}</p>
-                <p className="text-2xl font-black text-[#e6007e] tracking-tighter">€{lastMonthTotal.toLocaleString()}<span className="text-[10px] font-normal text-[#888888] ml-1">{t.perMonth}</span></p>
-                <p className="text-[10px] text-[#666666] mt-0.5">{t.passiveIncome}</p>
+                <p className="text-xs text-[#a1a1aa] uppercase tracking-[0.2em] font-black">{t.month} {totalMonths}</p>
+                <p className="text-2xl sm:text-3xl font-black text-[#e6007e] tracking-tighter tabular-nums drop-shadow-sm">
+                  €{lastMonthTotal.toLocaleString()}<span className="text-xs font-normal text-[#a1a1aa] ml-1">{t.perMonth}</span>
+                </p>
+                <p className="text-xs text-[#a1a1aa] mt-0.5">{t.passiveIncome}</p>
               </div>
             </div>
             
@@ -338,44 +342,44 @@ export const Passief: React.FC<PassiefProps> = ({
               <ResponsiveContainer width="100%" height={290}>
                 <LineChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1f1f1f" />
-                  <XAxis dataKey="name" stroke="#555555" fontSize={11} />
-                  <YAxis stroke="#555555" fontSize={11} />
+                  <XAxis dataKey="name" stroke="#666666" fontSize={12} tickLine={false} />
+                  <YAxis stroke="#666666" fontSize={12} tickLine={false} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #222222', borderRadius: '14px', fontSize: '12px', color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333333', borderRadius: '14px', fontSize: '12px', color: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.8)' }}
                     itemStyle={{ color: '#fff' }}
                   />
                   <Line type="monotone" dataKey="Referral" stroke="#e6007e" strokeWidth={3} dot={false} />
-                  <Line type="monotone" dataKey="Mining" stroke="#a855f7" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="Estate" stroke="#10b981" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="Totaal" stroke="#ffffff" strokeWidth={2} strokeDasharray="5 5" dot={true} />
+                  <Line type="monotone" dataKey="Mining" stroke="#a855f7" strokeWidth={2.5} dot={false} />
+                  <Line type="monotone" dataKey="Estate" stroke="#10b981" strokeWidth={2.5} dot={false} />
+                  <Line type="monotone" dataKey="Totaal" stroke="#ffffff" strokeWidth={2.5} strokeDasharray="5 5" dot={true} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Legend */}
-            <div className="px-6 py-3 border-t border-[#1a1a1a] flex flex-wrap items-center justify-center gap-6 text-[11px] font-bold">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#e6007e]" /> {t.referralTitle} ({totalReferrals * years} {t.totalLabel})</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> {t.miningTitle} (+1{t.perMonth})</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> {t.estateTitle} (+1{t.perMonth})</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 bg-white rounded" /> Totaal</span>
+            {/* Symmetrical Legend */}
+            <div className="px-6 py-4 border-t border-[#1c1c1c] flex flex-wrap items-center justify-center gap-6 text-xs font-bold text-[#a1a1aa]">
+              <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#e6007e]" /> {t.referralTitle} ({totalReferrals * years} {t.totalLabel})</span>
+              <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> {t.miningTitle} (+1{t.perMonth})</span>
+              <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> {t.estateTitle} (+1{t.perMonth})</span>
+              <span className="flex items-center gap-2"><span className="w-2.5 h-0.5 bg-white rounded" /> Totaal</span>
             </div>
           </div>
 
-          {/* Bottom CTAs */}
-          <div className="p-6 border-t border-[#1a1a1a] flex items-center gap-3">
+          {/* Symmetrical Bottom CTAs */}
+          <div className="p-6 sm:p-8 border-t border-[#1c1c1c] flex items-center gap-4">
             <button 
               onClick={() => {
                 sfx.whoosh();
                 onNavigate('bonus');
               }}
-              className="px-5 py-4 rounded-xl border border-[#222222] bg-[#0d0d0d] hover:bg-[#141414] text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all active:scale-95"
+              className="px-6 py-4 rounded-2xl border border-[#262626] bg-[#0d0d0d] hover:bg-[#161616] text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all active:scale-95"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Plaatsingsbonus</span>
             </button>
             <button 
               onClick={handleJoinClick}
-              className="group flex-1 py-4 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.6)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.8)] flex items-center justify-center gap-2 active:scale-95 hover:scale-[1.01]"
+              className="group flex-1 py-4 bg-[#e6007e] hover:bg-[#c00069] text-white rounded-2xl font-black text-xs uppercase tracking-[0.15em] transition-all duration-300 shadow-[0_8px_32px_-8px_rgba(230,0,126,0.65)] hover:shadow-[0_8px_32px_rgba(230,0,126,0.85)] flex items-center justify-center gap-2 active:scale-95 hover:scale-[1.01]"
             >
               <span>JOIN</span>
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
