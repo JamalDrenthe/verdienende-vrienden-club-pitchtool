@@ -198,7 +198,7 @@ export default function App() {
         </div>
       )}
 
-      <div className="min-h-screen bg-slate-50 dark:bg-[#060a12] text-slate-900 dark:text-slate-200 font-sans selection:bg-cyan-500/30 transition-colors duration-300">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#000000] text-slate-900 dark:text-[#f3f4f6] font-sans selection:bg-[#e6007e]/40 transition-colors duration-300">
         <Navbar
           currentPage={currentPage}
           onNavigate={setCurrentPage}

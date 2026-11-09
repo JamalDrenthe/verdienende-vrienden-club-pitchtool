@@ -39,7 +39,7 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
   const progressPercent = Math.round(((currentIndex + 1) / FUNNEL_STEPS.length) * 100);
 
   return (
-    <aside aria-label="Pitch Funnel Voortgang" className="sticky top-20 z-40 bg-white/90 dark:bg-[#060a12]/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 transition-all duration-300 shadow-sm">
+    <aside aria-label="Pitch Funnel Voortgang" className="sticky top-20 z-40 bg-white/95 dark:bg-[#000000]/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-[#1a1a1a] transition-all duration-300 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
         <div className="flex items-center justify-between gap-4">
           
@@ -51,7 +51,7 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
               title={prevStep ? `Vorige stap (←): ${prevStep.labelNl}` : 'Eerste stap'}
               className={`p-2 rounded-xl transition-all duration-200 flex items-center justify-center ${
                 prevStep
-                  ? 'bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95'
+                  ? 'bg-slate-100 hover:bg-slate-200 dark:bg-[#111111] dark:hover:bg-[#1a1a1a] text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 border border-transparent dark:border-[#222222]'
                   : 'opacity-30 text-slate-400 cursor-not-allowed'
               }`}
             >
@@ -59,7 +59,7 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
             </button>
 
             <div className="hidden sm:flex flex-col">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-[#666666]">
                 {language === 'nl' ? `Stap ${currentStep.num} van ${FUNNEL_STEPS.length}` : `Step ${currentStep.num} of ${FUNNEL_STEPS.length}`}
               </span>
               <span className="text-xs font-bold text-slate-800 dark:text-white truncate max-w-[140px]">
@@ -79,19 +79,19 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
                   onClick={() => onNavigate(step.id)}
                   className={`group relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md shadow-blue-500/25 scale-105'
+                      ? 'bg-[#e6007e] text-white shadow-[0_4px_24px_rgba(230,0,126,0.45)] scale-105'
                       : isCompleted
-                      ? 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
-                      : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+                      ? 'bg-slate-100 dark:bg-[#0d0d0d] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#161616] border border-transparent dark:border-[#1c1c1c]'
+                      : 'text-slate-400 dark:text-[#666666] hover:text-slate-600 dark:hover:text-slate-300'
                   }`}
                 >
                   <span
                     className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold transition-transform ${
                       isActive
-                        ? 'bg-white text-blue-600 font-extrabold shadow-sm'
+                        ? 'bg-white text-[#e6007e] font-black shadow-sm'
                         : isCompleted
-                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                        : 'bg-slate-200 dark:bg-white/10 text-slate-500'
+                        ? 'bg-emerald-500/20 text-emerald-400'
+                        : 'bg-slate-200 dark:bg-[#1a1a1a] text-slate-500 dark:text-[#666666]'
                     }`}
                   >
                     {isCompleted ? <Check className="w-2.5 h-2.5 stroke-[3]" /> : step.num}
@@ -109,21 +109,21 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
             {/* Live Earnings Pill */}
             <div
               title={`Geschat Maandinkomen: €${totalMonthly.toLocaleString('nl-NL')}/mnd (Basis €${basisIncome} + Bonus €${bonusIncome} + Passief €${passiveMonthly})`}
-              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-bold text-xs shadow-sm"
+              className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#0a0a0a] border border-[#222222] text-white font-bold text-xs shadow-sm hover:border-[#e6007e]/40 transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+              <Sparkles className="w-3.5 h-3.5 text-[#e6007e] animate-pulse" />
               <div className="flex flex-col text-right leading-tight">
-                <span className="text-[9px] uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                <span className="text-[9px] uppercase tracking-[0.2em] font-black text-[#666666]">
                   {language === 'nl' ? 'Live Potentieel' : 'Live Projection'}
                 </span>
-                <span className="font-extrabold text-slate-900 dark:text-white">
-                  €{totalMonthly.toLocaleString('nl-NL')}<span className="text-[10px] font-medium text-slate-400">/mnd</span>
+                <span className="font-black text-white text-xs sm:text-sm">
+                  €{totalMonthly.toLocaleString('nl-NL')}<span className="text-[10px] font-medium text-[#888888]">/mnd</span>
                 </span>
               </div>
             </div>
 
             {/* Keyboard shortcut hint */}
-            <span className="hidden xl:inline-flex items-center gap-1 text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-lg border border-slate-200 dark:border-white/5">
+            <span className="hidden xl:inline-flex items-center gap-1 text-[10px] text-[#666666] bg-[#0a0a0a] px-2 py-1 rounded-lg border border-[#1f1f1f]">
               <span>←</span>
               <span>→</span>
             </span>
@@ -135,8 +135,8 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
               title={nextStep ? `Volgende stap (→): ${nextStep.labelNl}` : 'Laatste stap'}
               className={`p-2 rounded-xl transition-all duration-200 flex items-center justify-center ${
                 nextStep
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 active:scale-95 cursor-pointer'
-                  : 'opacity-30 text-slate-400 cursor-not-allowed bg-slate-100 dark:bg-white/5'
+                  ? 'bg-[#e6007e] hover:bg-[#c00069] text-white shadow-md shadow-[#e6007e]/30 active:scale-95 cursor-pointer'
+                  : 'opacity-30 text-slate-400 cursor-not-allowed bg-slate-100 dark:bg-[#111111]'
               }`}
             >
               <ChevronRight className="w-4 h-4" />
@@ -145,9 +145,9 @@ export const FunnelProgress: React.FC<FunnelProgressProps> = ({
         </div>
 
         {/* Thin bottom progress bar line */}
-        <div className="w-full bg-slate-100 dark:bg-white/5 h-0.5 mt-2 rounded-full overflow-hidden">
+        <div className="w-full bg-slate-100 dark:bg-[#1a1a1a] h-0.5 mt-2 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-[#e6007e] via-[#ff2a9d] to-[#e6007e] transition-all duration-500 ease-out shadow-[0_0_8px_rgba(230,0,126,0.6)]"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
