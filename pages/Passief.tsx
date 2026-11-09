@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Server, Home as HomeIcon, ChevronRight, ChevronLeft, Check, Sparkles, TrendingUp, Layers } from 'lucide-react';
+import { Users, Server, Home as HomeIcon, ChevronRight, ChevronLeft, Check, Sparkles, TrendingUp, Layers, Lock } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { PageView, Language, CalculatorState } from '../types';
 import { translations } from '../translations';
@@ -10,7 +10,6 @@ interface PassiefProps {
   language: Language;
   calcState?: CalculatorState;
   setReferrals?: (referrals: number) => void;
-  setRefValue?: (val: number) => void;
 }
 
 export const Passief: React.FC<PassiefProps> = ({
@@ -19,26 +18,20 @@ export const Passief: React.FC<PassiefProps> = ({
   language,
   calcState,
   setReferrals,
-  setRefValue,
 }) => {
   const t = translations[language].passief;
   const [localReferrals, setLocalReferrals] = useState(120);
-  const [localRefValue, setLocalRefValue] = useState(25);
   const [useMining, setUseMining] = useState(false);
   const [useEstate, setUseEstate] = useState(false);
   const [years, setYears] = useState<1 | 3 | 5>(1);
 
   const totalReferrals = calcState ? calcState.referrals : localReferrals;
-  const refValue = calcState ? calcState.refValue : localRefValue;
+  // Vast bedrag per kandidaat: €25/mnd (mag niet aangepast worden)
+  const refValue = 25;
 
   const handleReferralsChange = (val: number) => {
     if (setReferrals) setReferrals(val);
     else setLocalReferrals(val);
-  };
-
-  const handleRefValueChange = (val: number) => {
-    if (setRefValue) setRefValue(val);
-    else setLocalRefValue(val);
   };
 
   const miningValue = 50;
@@ -176,19 +169,24 @@ export const Passief: React.FC<PassiefProps> = ({
                       className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
                     />
                   </div>
-                  <div>
-                    <div className="flex justify-between items-baseline mb-1">
-                      <label htmlFor="passief-amount-slider" className="text-[10px] text-slate-400 font-semibold uppercase">{t.amountLabel}</label>
-                      <span className="text-cyan-600 dark:text-cyan-400 font-bold text-sm">€{refValue}/mnd</span>
+                  {/* Vast Bedrag per Kandidaat (Vastgezet op €25/mnd, mag niet aangepast worden) */}
+                  <div className="p-3.5 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+                        <Lock className="w-3.5 h-3.5 text-cyan-400" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[11px] font-bold text-slate-800 dark:text-white">Bedrag per Kandidaat</span>
+                          <span className="text-[9px] uppercase tracking-wider font-extrabold bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 px-1.5 py-0.5 rounded">Vast</span>
+                        </div>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Vaste maandelijkse commissie</p>
+                      </div>
                     </div>
-                    <input 
-                      id="passief-amount-slider"
-                      type="range" min="5" max="100" step="5"
-                      value={refValue} 
-                      onChange={(e) => handleRefValueChange(parseInt(e.target.value) || 25)}
-                      aria-label={t.amountLabel}
-                      className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
-                    />
+                    <div className="text-right">
+                      <span className="text-base font-extrabold text-cyan-600 dark:text-cyan-400">€25</span>
+                      <span className="text-[10px] text-slate-400 font-medium ml-0.5">/mnd</span>
+                    </div>
                   </div>
                 </div>
               </div>

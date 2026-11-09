@@ -42,10 +42,6 @@ export default function App() {
     setCalcState((prev) => ({ ...prev, referrals }));
   }, []);
 
-  const setRefValue = useCallback((refValue: number) => {
-    setCalcState((prev) => ({ ...prev, refValue }));
-  }, []);
-
   // Initial load overlay
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -140,7 +136,6 @@ export default function App() {
             language={language}
             calcState={calcState}
             setReferrals={setReferrals}
-            setRefValue={setRefValue}
           />
         );
       case 'join':
