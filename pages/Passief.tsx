@@ -148,8 +148,8 @@ export const Passief: React.FC<PassiefProps> = ({
                   <h4 className="font-bold text-white flex items-center text-sm">
                     <Users size={15} className="mr-2 text-[#e6007e]"/> {t.referralTitle}
                   </h4>
-                  <span className="text-[10px] font-black bg-[#e6007e]/15 text-[#e6007e] px-2.5 py-0.5 rounded-full border border-[#e6007e]/30">
-                    {totalReferrals} × €{refValue}
+                  <span className="text-[10px] font-black bg-[#e6007e]/20 text-white px-2.5 py-0.5 rounded-full border border-[#e6007e]/40 shadow-sm">
+                    {totalReferrals} × €{refValue} = <span className="text-[#e6007e]">€{(totalReferrals * refValue).toLocaleString('nl-NL')}/mnd</span>
                   </span>
                 </div>
                 <p className="text-[11px] text-[#777777] mb-3 font-medium">{t.referralDesc}</p>
@@ -187,6 +187,27 @@ export const Passief: React.FC<PassiefProps> = ({
                     <div className="text-right">
                       <span className="text-base font-black text-white">€25</span>
                       <span className="text-[10px] text-[#777777] font-medium ml-0.5">/mnd</span>
+                    </div>
+                  </div>
+
+                  {/* TOTAAL BEDRAG PASSIEF INKOMEN DISPLAY */}
+                  <div className="mt-3 p-4 rounded-xl bg-gradient-to-r from-[#e6007e]/20 via-[#c00069]/15 to-[#0a0a0a] border border-[#e6007e]/40 flex items-center justify-between shadow-[0_4px_20px_rgba(230,0,126,0.15)]">
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e6007e]">
+                        Totaal Passief Bedrag
+                      </span>
+                      <p className="text-[11px] text-[#888888] font-medium mt-0.5">
+                        {totalReferrals} kandidaten × €25/mnd
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl sm:text-3xl font-black text-white tracking-tighter">
+                        €{(totalReferrals * refValue).toLocaleString('nl-NL')}
+                        <span className="text-xs font-semibold text-[#888888] ml-1">/mnd</span>
+                      </div>
+                      <div className="text-[11px] text-[#ff2a9d] font-black tracking-tight">
+                        €{((totalReferrals * refValue) * 12).toLocaleString('nl-NL')} <span className="text-[9px] text-[#888888] font-normal">/jaar</span>
+                      </div>
                     </div>
                   </div>
                 </div>
