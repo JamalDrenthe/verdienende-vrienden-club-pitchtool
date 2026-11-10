@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield, Volume2, VolumeX } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moon, Sun, Shield, Volume2, VolumeX, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { PageView, Language } from '../types';
 import { translations } from '../translations';
 import { sfx } from '../lib/soundFx';
@@ -31,15 +31,35 @@ export const Navbar: React.FC<NavbarProps> = ({
   language,
   toggleLanguage
 }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const menuRef = useRef<HTMLDivElement>(null);
   const t = translations[language].nav;
 
+  // Sync sound initial state
+  useEffect(() => {
+    setSoundEnabled(sfx.isEnabled());
+  }, []);
+
+  // Close desktop dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
+
   const handleToggleSound = () => {
-    const next = !soundEnabled;
+    const next = sfx.toggle();
     setSoundEnabled(next);
-    sfx.setEnabled(next);
-    if (next) sfx.click();
   };
 
   const navItems = [
@@ -49,9 +69,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'bonus', label: t.bonus, icon: TrendingUp },
     { id: 'passief', label: t.passief, icon: FileText },
     { id: 'join', label: t.join, icon: UserPlus },
-    ...(proMode ? [
-      { id: 'ecosystem', label: t.ecosystem, icon: Share2 },
-    ] : []),
   ];
 
   return (
@@ -59,80 +76,205 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Brand / Logo Section */}
+          {/* Brand / Logo */}
           <div className="flex-shrink-0 flex items-center gap-3 cursor-pointer group select-none" onClick={() => onNavigate('home')}>
             <img
               src="/vvc-logo.svg"
               alt="VVC Logo"
               className="w-9 h-9 rounded-full shadow-[0_0_16px_rgba(230,0,126,0.5)] group-hover:scale-105 transition-transform shrink-0"
             />
-          </div>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-2">
-              {navItems.map((item) => {
-                const isActive = currentPage === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => onNavigate(item.id as PageView)}
-                    className={`relative px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
-                      isActive
-                        ? 'bg-slate-100 dark:bg-[#141414] text-[#e6007e] dark:text-white shadow-sm border border-slate-200/80 dark:border-[#e6007e]/60 shadow-[0_0_20px_rgba(230,0,126,0.25)]'
-                        : 'text-slate-600 dark:text-[#a1a1aa] hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#121212]'
-                    }`}
-                  >
-                    <item.icon className={`h-4 w-4 ${isActive ? 'text-[#e6007e]' : 'text-slate-400 dark:text-[#a1a1aa]'}`} />
-                    {item.label}
-                  </button>
-                );
-              })}
+            <div className="flex items-center">
+              <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
+              <span className="text-[#e6007e] font-black text-2xl leading-none">.</span>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <button 
-              onClick={handleToggleSound}
-              title={soundEnabled ? 'Geluidseffecten dempen' : 'Geluidseffecten inschakelen'}
-              aria-label={soundEnabled ? 'Geluidseffecten dempen' : 'Geluidseffecten inschakelen'}
-              className="p-2.5 rounded-xl text-slate-500 dark:text-[#888888] hover:text-[#e6007e] dark:hover:text-[#e6007e] hover:bg-slate-100 dark:hover:bg-[#111111] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-[#222222]"
-            >
-              {soundEnabled ? <Volume2 className="h-4 w-4 text-[#e6007e]" /> : <VolumeX className="h-4 w-4" />}
-            </button>
-            <button 
-              onClick={toggleTheme}
-              aria-label={isDarkMode ? 'Lichte modus inschakelen' : 'Donkere modus inschakelen'}
-              className="p-2.5 rounded-xl text-slate-500 dark:text-[#888888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111111] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-[#222222]"
-            >
-              {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-            <button 
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-500 dark:text-[#888888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111111] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-[#222222]"
-            >
-              <Globe className="h-4 w-4" />
-              <span className="text-xs font-bold uppercase">{language}</span>
-            </button>
-            <button 
-              onClick={toggleProMode}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
-                proMode 
-                  ? 'bg-emerald-100/50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                  : 'bg-slate-100 dark:bg-[#0d0d0d] text-slate-500 dark:text-[#888888] border-slate-200 dark:border-[#1f1f1f] hover:border-slate-300 dark:hover:border-[#333333]'
-              }`}
-            >
-              <Shield className="h-3 w-3" />
-              {proMode ? t.proOn : t.proOff}
-            </button>
+          {/* Desktop Nav: Home through Join + Hamburger Menu */}
+          <div className="hidden md:flex items-center space-x-2">
+            {navItems.map((item) => {
+              const isActive = currentPage === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    sfx.whoosh();
+                    onNavigate(item.id as PageView);
+                  }}
+                  className={`relative px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-slate-100 dark:bg-[#141414] text-[#e6007e] dark:text-white shadow-sm border border-slate-200/80 dark:border-[#e6007e]/60 shadow-[0_0_20px_rgba(230,0,126,0.25)]'
+                      : 'text-slate-600 dark:text-[#a1a1aa] hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#121212]'
+                  }`}
+                >
+                  <item.icon className={`h-4 w-4 ${isActive ? 'text-[#e6007e]' : 'text-slate-400 dark:text-[#a1a1aa]'}`} />
+                  {item.label}
+                </button>
+              );
+            })}
+
+            {/* Hamburger Menu (Alles na Join) */}
+            <div className="relative ml-2" ref={menuRef}>
+              <button
+                onClick={() => {
+                  sfx.click();
+                  setMenuOpen(!menuOpen);
+                }}
+                aria-label="Instellingen en opties"
+                title="Instellingen en opties"
+                className={`p-2.5 rounded-xl border transition-all duration-200 flex items-center justify-center cursor-pointer ${
+                  menuOpen
+                    ? 'bg-[#e6007e] text-white border-[#e6007e] shadow-[0_0_20px_rgba(230,0,126,0.45)]'
+                    : 'text-slate-600 dark:text-[#a1a1aa] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] border-slate-200 dark:border-[#262626]'
+                }`}
+              >
+                {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </button>
+
+              {/* Hamburger Dropdown Panel */}
+              {menuOpen && (
+                <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[#262626] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] p-2.5 z-50 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#1a1a1a] mb-1 flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#a1a1aa]">
+                      Instellingen
+                    </span>
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#e6007e]" />
+                  </div>
+
+                  <div className="space-y-1">
+                    {/* 1. Geluid Toggle */}
+                    <button
+                      onClick={handleToggleSound}
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#141414] transition-colors group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#161616] border border-slate-200 dark:border-[#262626] flex items-center justify-center text-[#e6007e]">
+                          {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-slate-400" />}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white">Geluidseffecten</p>
+                          <p className="text-[10px] text-[#a1a1aa]">Audio feedback bij acties</p>
+                        </div>
+                      </div>
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                        soundEnabled
+                          ? 'bg-[#e6007e]/15 text-[#e6007e] border border-[#e6007e]/30'
+                          : 'bg-slate-100 dark:bg-[#1c1c1c] text-[#71717a]'
+                      }`}>
+                        {soundEnabled ? 'Aan' : 'Uit'}
+                      </span>
+                    </button>
+
+                    {/* 2. Light / Dark Thema */}
+                    <button
+                      onClick={() => {
+                        sfx.click();
+                        toggleTheme();
+                      }}
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#141414] transition-colors group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#161616] border border-slate-200 dark:border-[#262626] flex items-center justify-center text-amber-400 dark:text-amber-300">
+                          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4 text-slate-700" />}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white">Thema</p>
+                          <p className="text-[10px] text-[#a1a1aa]">OLED Zwart / Licht</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider bg-slate-100 dark:bg-[#1c1c1c] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#262626]">
+                        {isDarkMode ? 'Donker' : 'Licht'}
+                      </span>
+                    </button>
+
+                    {/* 3. NL / EN Toggle */}
+                    <button
+                      onClick={() => {
+                        sfx.click();
+                        toggleLanguage();
+                      }}
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#141414] transition-colors group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#161616] border border-slate-200 dark:border-[#262626] flex items-center justify-center text-sky-400">
+                          <Globe className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white">Taal</p>
+                          <p className="text-[10px] text-[#a1a1aa]">Nederlands / English</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider bg-sky-500/15 text-sky-400 border border-sky-500/30">
+                        {language.toUpperCase()}
+                      </span>
+                    </button>
+
+                    {/* 4. Pro Uit / Pro Aan */}
+                    <button
+                      onClick={() => {
+                        sfx.click();
+                        toggleProMode();
+                      }}
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#141414] transition-colors group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${
+                          proMode
+                            ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+                            : 'bg-slate-100 dark:bg-[#161616] border-slate-200 dark:border-[#262626] text-slate-400'
+                        }`}>
+                          <Shield className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white">Pro Modus</p>
+                          <p className="text-[10px] text-[#a1a1aa]">Geavanceerd ecosysteem</p>
+                        </div>
+                      </div>
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                        proMode
+                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                          : 'bg-slate-100 dark:bg-[#1c1c1c] text-[#71717a]'
+                      }`}>
+                        {proMode ? t.proOn : t.proOff}
+                      </span>
+                    </button>
+
+                    {/* Optioneel: Ecosysteem als Pro Modus aan staat */}
+                    {proMode && (
+                      <button
+                        onClick={() => {
+                          sfx.whoosh();
+                          onNavigate('ecosystem');
+                          setMenuOpen(false);
+                        }}
+                        className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#141414] transition-colors text-left border-t border-slate-100 dark:border-[#1a1a1a] mt-1 pt-2.5"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                            <Share2 className="h-4 w-4" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-white">{t.ecosystem}</p>
+                            <p className="text-[10px] text-[#a1a1aa]">Volledig netwerkoverzicht</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-[#a1a1aa]" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Trigger (Hamburger voor mobiel) */}
           <div className="-mr-2 flex md:hidden">
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 dark:text-[#888888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111111] focus:outline-none"
+              onClick={() => {
+                sfx.click();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              aria-label="Open navigatiemenu"
+              className="inline-flex items-center justify-center p-2 rounded-xl text-slate-500 dark:text-[#a1a1aa] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] focus:outline-none"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -140,45 +282,116 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 dark:bg-[#000000]/95 backdrop-blur-xl border-t border-slate-200 dark:border-[#1a1a1a]">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-2xl border-t border-slate-200 dark:border-[#1a1a1a] animate-in slide-in-from-top-4 duration-200">
+          <div className="px-3 pt-3 pb-4 space-y-1">
+            {/* Primary Nav Links */}
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
+                  sfx.whoosh();
                   onNavigate(item.id as PageView);
                   setMobileMenuOpen(false);
                 }}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 ${
+                className={`w-full text-left px-3.5 py-3 rounded-xl text-sm font-bold flex items-center gap-3 transition-colors ${
                   currentPage === item.id
-                    ? 'bg-[#e6007e]/10 text-[#e6007e]'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111111]'
+                    ? 'bg-[#e6007e]/15 text-[#e6007e] border border-[#e6007e]/30'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141414]'
                 }`}
               >
-                <item.icon className="h-5 w-5" />
-                {item.label}
+                <item.icon className="h-5 w-5 text-[#e6007e]" />
+                <span>{item.label}</span>
               </button>
             ))}
-            <div className="pt-4 border-t border-slate-200 dark:border-[#1f1f1f] mt-4 flex justify-between items-center px-3">
-               <a href="https://verdienendevrienden.club" target="_blank" rel="noopener noreferrer" className="px-4 py-1.5 bg-[#e6007e] hover:bg-[#c00069] text-white text-sm font-bold rounded-full transition-all duration-300 shadow-md shadow-[#e6007e]/25">{t.settings}</a>
-               <div className="flex gap-2">
-                 <button onClick={handleToggleSound} aria-label={soundEnabled ? 'Geluid dempen' : 'Geluid inschakelen'} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
-                    {soundEnabled ? <Volume2 className="h-4 w-4 text-[#e6007e]" /> : <VolumeX className="h-4 w-4 text-slate-500" />}
-                 </button>
-                 <button onClick={toggleTheme} aria-label={isDarkMode ? 'Lichte modus' : 'Donkere modus'} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
-                    {isDarkMode ? <Sun className="h-4 w-4 text-slate-400" /> : <Moon className="h-4 w-4 text-slate-500" />}
-                 </button>
-                 <button onClick={toggleLanguage} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center w-10 h-10 font-bold text-xs uppercase">
-                    {language}
-                 </button>
-                 <button 
-                  onClick={toggleProMode}
-                  className={`px-3 py-1 rounded-full text-xs font-bold border ${proMode ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500' : 'text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-600'}`}>
-                   {proMode ? t.proOn : t.proOff}
-                 </button>
-               </div>
+
+            {proMode && (
+              <button
+                onClick={() => {
+                  sfx.whoosh();
+                  onNavigate('ecosystem');
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full text-left px-3.5 py-3 rounded-xl text-sm font-bold flex items-center gap-3 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141414]"
+              >
+                <Share2 className="h-5 w-5 text-purple-400" />
+                <span>{t.ecosystem}</span>
+              </button>
+            )}
+
+            {/* Submenu met de 4 opties na Join */}
+            <div className="pt-3 border-t border-slate-200 dark:border-[#1a1a1a] mt-3 space-y-1.5">
+              <div className="px-2 pb-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#a1a1aa]">
+                  Instellingen
+                </span>
+              </div>
+
+              {/* 1. Geluid */}
+              <button
+                onClick={handleToggleSound}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-[#222222]"
+              >
+                <div className="flex items-center gap-2.5">
+                  {soundEnabled ? <Volume2 className="h-4 w-4 text-[#e6007e]" /> : <VolumeX className="h-4 w-4 text-slate-400" />}
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">Geluid</span>
+                </div>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded ${soundEnabled ? 'text-[#e6007e]' : 'text-slate-400'}`}>
+                  {soundEnabled ? 'Aan' : 'Uit'}
+                </span>
+              </button>
+
+              {/* 2. Thema */}
+              <button
+                onClick={() => {
+                  sfx.click();
+                  toggleTheme();
+                }}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-[#222222]"
+              >
+                <div className="flex items-center gap-2.5">
+                  {isDarkMode ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-700" />}
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">Thema</span>
+                </div>
+                <span className="text-[10px] font-black px-2 py-0.5 rounded text-slate-700 dark:text-slate-300">
+                  {isDarkMode ? 'Donker' : 'Licht'}
+                </span>
+              </button>
+
+              {/* 3. Taal */}
+              <button
+                onClick={() => {
+                  sfx.click();
+                  toggleLanguage();
+                }}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-[#222222]"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Globe className="h-4 w-4 text-sky-400" />
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">Taal</span>
+                </div>
+                <span className="text-[10px] font-black px-2 py-0.5 rounded text-sky-400">
+                  {language.toUpperCase()}
+                </span>
+              </button>
+
+              {/* 4. Pro Modus */}
+              <button
+                onClick={() => {
+                  sfx.click();
+                  toggleProMode();
+                }}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-[#222222]"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Shield className={`h-4 w-4 ${proMode ? 'text-emerald-400' : 'text-slate-400'}`} />
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">Pro Modus</span>
+                </div>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded ${proMode ? 'text-emerald-400' : 'text-slate-400'}`}>
+                  {proMode ? t.proOn : t.proOff}
+                </span>
+              </button>
             </div>
           </div>
         </div>
