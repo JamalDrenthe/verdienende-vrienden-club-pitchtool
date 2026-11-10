@@ -231,20 +231,23 @@ export default function App() {
       {/* Global Chat Overlay */}
       {chatOpen && <VVCChatbot onClose={() => setChatOpen(false)} />}
 
-      {/* Global Chat Button */}
+      {/* Global Chat Button (VVC Magenta OLED Styling) */}
       <button
-        aria-label="Chat"
-        onClick={() => setChatOpen(!chatOpen)}
-        className={`fixed bottom-6 right-6 p-3.5 rounded-full shadow-lg transition-all duration-300 hover:scale-105 z-50 ${
+        aria-label="VVC AI Chat"
+        onClick={() => {
+          sfx.click();
+          setChatOpen(!chatOpen);
+        }}
+        className={`fixed bottom-6 right-6 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 z-50 flex items-center justify-center group ${
           chatOpen
-            ? 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-slate-500/20'
-            : 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-indigo-500/30 hover:shadow-indigo-500/50'
+            ? 'bg-[#141414] border border-[#2a2a2a] text-white shadow-black/80'
+            : 'bg-[#e6007e] hover:bg-[#c00069] text-white shadow-[0_0_30px_rgba(230,0,126,0.55)] border border-[#ff47ab]/30'
         }`}
       >
         {chatOpen ? (
-          <span className="block w-6 h-6 text-center font-bold leading-6">&times;</span>
+          <span className="block w-6 h-6 text-center font-bold text-xl leading-6">&times;</span>
         ) : (
-          <MessageCircle className="w-6 h-6" />
+          <MessageCircle className="w-6 h-6 group-hover:scale-105 transition-transform" />
         )}
       </button>
     </>

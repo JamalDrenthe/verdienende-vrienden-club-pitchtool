@@ -1,174 +1,199 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, User, Sparkles, DollarSign, Users, ShieldCheck, Zap, ArrowRight, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Send, User, Sparkles, DollarSign, Users, Zap, ShieldCheck, ChevronDown, ChevronUp, X, Bot, ArrowRight } from 'lucide-react';
+import { askGemini, ChatMessage } from '../lib/geminiChat';
+import { sfx } from '../lib/soundFx';
 
 interface VVCChatbotProps {
   onClose: () => void;
 }
 
-interface Message {
-  id: number;
-  sender: 'user' | 'bot';
-  text: string;
-}
-
-const knowledgeBase = [
-  {
-    keywords: ['verdien', 'geld', 'salaris', 'inkomen', 'betaald', '30', '300', 'finance'],
-    response: "Het VVC Verdienmodel bestaat uit drie levels:\n\n1. **Uurvergoeding:** €30 per uur gegarandeerd tijdens acquisitie.\n2. **Plaatsingsbonus:** €300 bonus per afgeronde plaatsing direct uitbetaald.\n3. **Passief Portfolio:** €25 per maand per actieve geplaatste kandidaat.\n\nRekenvoorbeeld: 120 plaatsingen per jaar levert €3.000 per maand passief inkomen op."
-  },
-  {
-    keywords: ['cultuur', 'waarden', 'sfeer', 'normen', 'dna'],
-    response: "De kernwaarden van de VVC:\n\n1. **Loyaliteit:** Wij werken als vaste partners samen.\n2. **Executie:** Concrete resultaten en duidelijke afspraken.\n3. **Eigenaarschap:** Zelfstandig ondernemen met professionele clubondersteuning."
-  },
-  {
-    keywords: ['wat is vvc', 'over ons', 'wie zijn jullie', 'bedrijf', 'club'],
-    response: "De Verdienende Vrienden Club is een besloten netwerk van commerciële professionals. Wij koppelen specialisten aan vacatures en projecten met vaste uurvergoedingen, plaatsingsbonussen en maandelijks passief inkomen."
-  },
-  {
-    keywords: ['diensten', 'wat doen jullie', 'klanten', 'aanbod', 'product'],
-    response: "Onze operationele diensten voor partners:\n\n• **Werving & Selectie:** Selectie en plaatsing van kandidaten op openstaande rollen.\n• **Procesoptimalisatie:** Systemen stroomlijnen binnen organisaties.\n• **Kwaliteitscontrole:** Directe analyse van klantervaring en conversie."
-  },
-  {
-    keywords: ['double', 'team', 'pilot', 'duo', 'samenwerken'],
-    response: "**Double Team Formule**\n\nSamenwerking tussen twee specialisten:\n\n1. **Netwerker:** Legt contacten en opent deuren.\n2. **Closer:** Rondt het contract af.\n\nResultaat: Directe fee verdeling en structurele opbouw van passief inkomen."
-  },
-  {
-    keywords: ['passief', 'sneeuwbal', 'toekomst', 'pensioen'],
-    response: "**Passief Inkomen Model**\n\nElke geplaatste kandidaat levert maandelijks €25 op zolang de plaatsing actief blijft.\n\n• 10 kandidaten: €250 per maand\n• 120 kandidaten: €3.000 per maand\n\nDit inkomen keert maandelijks terug bovenop uw uren en plaatsingsbonussen."
-  }
-];
-
 const suggestions = [
-  { label: "Verdienmodel", icon: <DollarSign size={12} /> },
-  { label: "Double Team", icon: <Users size={12} /> },
-  { label: "Passief Inkomen", icon: <Zap size={12} /> },
-  { label: "Kernwaarden", icon: <ShieldCheck size={12} /> },
+  { label: 'Rekenvoorbeeld 10 deals', prompt: 'Reken exact voor hoeveel ik verdien bij 10 plaatsingen per maand en 20 uur per week.', icon: <DollarSign size={13} /> },
+  { label: 'Wat is Double Team?', prompt: 'Hoe werkt de Double Team formule tussen Netwerker en Closer precies?', icon: <Users size={13} /> },
+  { label: 'Hoe werkt passief inkomen?', prompt: 'Leg uit hoe het passief inkomen van €25 per maand per kandidaat cumulatief opbouwt.', icon: <Zap size={13} /> },
+  { label: 'Hoe meld ik me aan?', prompt: 'Wat is de procedure om toe te treden als partner via de JOIN knop?', icon: <ShieldCheck size={13} /> },
 ];
 
 export const VVCChatbot: React.FC<VVCChatbotProps> = ({ onClose }) => {
-  const initialMessage: Message = {
+  const initialMessage: ChatMessage = {
     id: 1,
     sender: 'bot',
-    text: 'Welkom bij de Verdienende Vrienden Club.\n\nStel hier uw vragen over het verdienmodel (€30 per uur, €300 bonus, €25 per maand passief), de Double Team opzet of onze intake procedure.'
+    text: 'Welkom bij de Verdienende Vrienden Club.\n\nIk ben de officiële VVC AI Assistent. Stel gerust elke vraag over onze inkomstenlevels (€30/uur basis, €300 plaatsingsbonus, €25/mnd passief), de Double Team formule of je aanmelding.',
   };
 
-  const [messages, setMessages] = useState<Message[]>([initialMessage]);
+  const [messages, setMessages] = useState<ChatMessage[]>([initialMessage]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  const processInput = (text: string): string => {
-    const lowerText = text.toLowerCase();
-    for (const entry of knowledgeBase) {
-      if (entry.keywords.some(keyword => lowerText.includes(keyword))) {
-        return entry.response;
-      }
-    }
-    return "Onderwerp niet herkend. Vraag gerust naar:\n• Uurvergoeding (€30 per uur)\n• Plaatsingsbonus (€300 per deal)\n• Passief inkomen (€25 per maand per kandidaat)\n• Double Team samenwerking";
-  };
+  const handleSend = async (customPrompt?: string) => {
+    const textToSend = (customPrompt || input).trim();
+    if (!textToSend || isTyping) return;
 
-  const handleSend = (text?: string) => {
-    const msg = text || input;
-    if (msg.trim() === '') return;
+    sfx.tick();
+    const userMessage: ChatMessage = {
+      id: Date.now(),
+      sender: 'user',
+      text: textToSend,
+    };
 
-    const userMessage: Message = { id: Date.now(), sender: 'user', text: msg };
-    setMessages(prev => [...prev, userMessage]);
+    const newHistory = [...messages, userMessage];
+    setMessages(newHistory);
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      const botMessage: Message = { id: Date.now() + 1, sender: 'bot', text: processInput(msg) };
-      setMessages(prev => [...prev, botMessage]);
+    try {
+      const botReplyText = await askGemini(textToSend, newHistory);
+      sfx.pop();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: 'bot',
+          text: botReplyText,
+        },
+      ]);
+    } catch (err) {
+      console.error('Chat error:', err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: 'bot',
+          text: 'Er trad een verbindingsfout op. Het VVC model bestaat uit: €30 per uur basis, €300 plaatsingsbonus en €25 per maand passief per kandidaat.',
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 800);
+    }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSend();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   return (
-    <div className="fixed bottom-24 right-6 w-[380px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-8rem)] z-[60] flex flex-col bg-white dark:bg-[#0F1623] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden chat-slide-up">
-      
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-white/5 bg-gradient-to-r from-indigo-600 to-violet-600">
+    <div className="fixed bottom-24 right-4 sm:right-6 w-[400px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-8rem)] z-[60] flex flex-col bg-[#0a0a0a] border border-[#262626] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] overflow-hidden chat-slide-up">
+      {/* Top Header */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#1f1f1f] bg-gradient-to-r from-[#141414] via-[#0d0d0d] to-[#0a0a0a] relative">
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#e6007e] to-transparent opacity-80" />
+        
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-            <Sparkles size={16} className="text-yellow-300" />
+          <div className="w-9 h-9 bg-[#e6007e]/20 border border-[#e6007e]/40 rounded-xl flex items-center justify-center text-[#e6007e] shadow-[0_0_15px_rgba(230,0,126,0.3)]">
+            <Bot size={18} />
           </div>
           <div>
-            <h3 className="text-white font-bold text-sm">VVC Support</h3>
-            <p className="text-white/60 text-[10px]">Online • Direct antwoord</p>
+            <div className="flex items-center gap-2">
+              <h3 className="text-white font-black text-sm tracking-tight">VVC AI Assistent</h3>
+              <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live
+              </span>
+            </div>
+            <p className="text-[#a1a1aa] text-[11px] font-medium">Gemini 3.5 Intelligentie</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-1.5">
           <button
-            onClick={() => setMessages([initialMessage])}
-            className="text-white/60 hover:text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg hover:bg-white/10 transition-colors"
+            onClick={() => {
+              sfx.click();
+              setMessages([initialMessage]);
+            }}
+            title="Wis gespreksgeschiedenis"
+            className="text-[#a1a1aa] hover:text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg hover:bg-white/5 transition-colors"
           >
             Reset
           </button>
-          <button aria-label="Sluit chat" onClick={onClose} className="text-white/60 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors">
-            <X size={16} />
+          <button
+            aria-label="Sluit chat"
+            onClick={() => {
+              sfx.whoosh();
+              onClose();
+            }}
+            className="text-[#a1a1aa] hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+          >
+            <X size={18} />
           </button>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 chat-scrollbar">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex w-full ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} chat-msg-enter`}
-          >
-            <div className={`flex max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'} items-end gap-2`}>
-              {/* Avatar */}
-              <div className={`w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                msg.sender === 'user'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/5'
-              }`}>
-                {msg.sender === 'user' ? <User size={13} /> : <Sparkles size={13} className="text-yellow-500" />}
-              </div>
+      {/* Messages Scroll Area */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#050505]">
+        {messages.map((msg) => {
+          const isUser = msg.sender === 'user';
+          return (
+            <div
+              key={msg.id}
+              className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200`}
+            >
+              <div className={`flex max-w-[88%] ${isUser ? 'flex-row-reverse' : 'flex-row'} items-start gap-2.5`}>
+                {/* Avatar */}
+                <div
+                  className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+                    isUser
+                      ? 'bg-[#e6007e] text-white shadow-md shadow-[#e6007e]/30'
+                      : 'bg-[#141414] border border-[#262626] text-[#e6007e]'
+                  }`}
+                >
+                  {isUser ? <User size={13} /> : <Bot size={13} />}
+                </div>
 
-              {/* Bubble */}
-              <div className={`relative p-3.5 text-[13px] leading-relaxed ${
-                msg.sender === 'user'
-                  ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-sm'
-                  : 'bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-slate-200 border border-slate-200 dark:border-white/5 rounded-2xl rounded-tl-sm'
-              }`}>
-                {msg.text.split('\n').map((line, i) => (
-                  <React.Fragment key={i}>
-                    {line.startsWith('•') || line.startsWith('1.') || line.startsWith('2.') || line.startsWith('3.') ? (
-                      <span className="block mb-1 font-semibold">{line}</span>
-                    ) : (
-                      <span className="block mb-1.5">{line}</span>
-                    )}
-                  </React.Fragment>
-                ))}
+                {/* Bubble */}
+                <div
+                  className={`p-3.5 text-xs sm:text-[13px] leading-relaxed rounded-2xl ${
+                    isUser
+                      ? 'bg-[#e6007e] text-white rounded-tr-sm font-medium shadow-md shadow-[#e6007e]/20'
+                      : 'bg-[#0f0f0f] text-[#f4f4f5] border border-[#222222] rounded-tl-sm shadow-sm'
+                  }`}
+                >
+                  {msg.text.split('\n').map((line, i) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) {
+                      return <div key={i} className="h-2" />;
+                    }
+                    if (trimmed.startsWith('* ') || trimmed.startsWith('• ') || trimmed.startsWith('- ')) {
+                      const itemText = trimmed.replace(/^[\*•\-]\s*/, '');
+                      return (
+                        <div key={i} className="flex items-start gap-1.5 my-1">
+                          <span className="text-[#e6007e] font-black leading-tight">•</span>
+                          <span className="flex-1 leading-snug">{renderInlineStyles(itemText)}</span>
+                        </div>
+                      );
+                    }
+                    return (
+                      <p key={i} className="mb-1.5 last:mb-0">
+                        {renderInlineStyles(line)}
+                      </p>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
-        {/* Typing */}
+        {/* Typing indicator */}
         {isTyping && (
-          <div className="flex justify-start w-full">
-            <div className="flex items-end gap-2">
-              <div className="w-7 h-7 rounded-xl bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/5 flex items-center justify-center">
-                <Sparkles size={13} className="text-yellow-500" />
+          <div className="flex justify-start w-full animate-in fade-in duration-200">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-xl bg-[#141414] border border-[#262626] text-[#e6007e] flex items-center justify-center shrink-0">
+                <Sparkles size={13} className="text-[#e6007e] animate-pulse" />
               </div>
-              <div className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 px-4 py-3 rounded-2xl rounded-tl-sm">
-                <div className="flex space-x-1.5">
-                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" />
-                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce chat-bounce-delay-1" />
-                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce chat-bounce-delay-2" />
-                </div>
+              <div className="bg-[#0f0f0f] border border-[#222222] px-4 py-3 rounded-2xl rounded-tl-sm flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-[#a1a1aa] mr-1">VVC AI denkt na</span>
+                <span className="w-1.5 h-1.5 bg-[#e6007e] rounded-full animate-bounce" />
+                <span className="w-1.5 h-1.5 bg-[#e6007e] rounded-full animate-bounce [animation-delay:0.2s]" />
+                <span className="w-1.5 h-1.5 bg-[#e6007e] rounded-full animate-bounce [animation-delay:0.4s]" />
               </div>
             </div>
           </div>
@@ -176,60 +201,79 @@ export const VVCChatbot: React.FC<VVCChatbotProps> = ({ onClose }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggestions + Input */}
-      <div className="border-t border-slate-200 dark:border-white/5 bg-white dark:bg-[#0F1623] px-4 pt-3 pb-4">
-        {/* Toggle */}
-        <div className="flex justify-between items-center mb-1.5">
-          <span className={`text-[9px] font-bold uppercase tracking-widest text-slate-400 transition-opacity ${showSuggestions ? 'opacity-100' : 'opacity-0'}`}>
-            Suggesties
+      {/* Suggestion Chips & Input */}
+      <div className="border-t border-[#1c1c1c] bg-[#0a0a0a] px-3.5 pt-3 pb-3.5">
+        {/* Toggle Suggestions */}
+        <div className="flex justify-between items-center mb-2 px-1">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#a1a1aa]">
+            Directe Vragen
           </span>
           <button
             onClick={() => setShowSuggestions(!showSuggestions)}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1 rounded-md hover:bg-slate-100 dark:hover:bg-white/5"
+            className="text-[#a1a1aa] hover:text-white transition-colors p-0.5 rounded"
           >
-            {showSuggestions ? <ChevronDown size={12} /> : <ChevronUp size={12} />}
+            {showSuggestions ? <ChevronDown size={13} /> : <ChevronUp size={13} />}
           </button>
         </div>
 
-        {/* Chips */}
-        <div className={`transition-all duration-300 overflow-hidden ${showSuggestions ? 'max-h-20 opacity-100 mb-2' : 'max-h-0 opacity-0 mb-0'}`}>
-          <div className="flex gap-1.5 overflow-x-auto pb-1 chat-scrollbar-hide">
+        {/* Suggestion Pills */}
+        {showSuggestions && (
+          <div className="flex gap-1.5 overflow-x-auto pb-2 chat-scrollbar-hide">
             {suggestions.map((sugg, idx) => (
               <button
                 key={idx}
-                onClick={() => handleSend(sugg.label)}
-                className="group flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full text-[11px] font-bold text-slate-600 dark:text-slate-300 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all whitespace-nowrap"
+                disabled={isTyping}
+                onClick={() => handleSend(sugg.prompt)}
+                className="group flex items-center gap-1.5 px-3 py-1.5 bg-[#121212] hover:bg-[#1c1c1c] border border-[#262626] hover:border-[#e6007e]/60 rounded-full text-[11px] font-bold text-[#d4d4d8] hover:text-white transition-all whitespace-nowrap active:scale-95 disabled:opacity-40"
               >
-                <span className="opacity-60 group-hover:opacity-100 transition-opacity">{sugg.icon}</span>
-                {sugg.label}
+                <span className="text-[#e6007e] group-hover:scale-110 transition-transform">{sugg.icon}</span>
+                <span>{sugg.label}</span>
               </button>
             ))}
           </div>
-        </div>
+        )}
 
-        {/* Input */}
-        <div className="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-1.5 focus-within:border-indigo-500/50 transition-colors">
+        {/* Text Input Row */}
+        <div className="flex items-center gap-2 bg-[#121212] border border-[#262626] focus-within:border-[#e6007e] focus-within:shadow-[0_0_15px_rgba(230,0,126,0.3)] rounded-2xl p-1.5 transition-all">
           <input
+            ref={inputRef}
             type="text"
             value={input}
+            disabled={isTyping}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Typ uw bericht..."
-            className="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border-none px-3 py-2 text-sm font-medium outline-none"
+            onKeyDown={handleKeyDown}
+            placeholder={isTyping ? 'VVC AI typt een antwoord...' : 'Stel je vraag over het verdienmodel...'}
+            className="flex-1 bg-transparent text-white placeholder-[#71717a] border-none px-3 py-2 text-xs sm:text-sm font-medium outline-none"
           />
           <button
             onClick={() => handleSend()}
-            disabled={!input.trim()}
-            className={`p-2.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
-              input.trim()
-                ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700 hover:scale-105 active:scale-95'
-                : 'bg-slate-200 dark:bg-white/10 text-slate-300 dark:text-slate-600 cursor-default'
+            disabled={!input.trim() || isTyping}
+            aria-label="Verstuur bericht"
+            className={`p-2.5 rounded-xl transition-all duration-200 flex items-center justify-center ${
+              input.trim() && !isTyping
+                ? 'bg-[#e6007e] hover:bg-[#c00069] text-white shadow-md shadow-[#e6007e]/35 hover:scale-105 active:scale-95 cursor-pointer'
+                : 'bg-[#1c1c1c] text-[#52525b] cursor-default'
             }`}
           >
-            {input.trim() ? <Send size={16} /> : <ArrowRight size={16} />}
+            {input.trim() ? <Send size={15} /> : <ArrowRight size={15} />}
           </button>
         </div>
       </div>
     </div>
   );
 };
+
+// Helper to render basic inline markdown bold tags like **text**
+function renderInlineStyles(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={index} className="font-extrabold text-white">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+}
