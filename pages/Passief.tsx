@@ -98,7 +98,7 @@ export const Passief: React.FC<PassiefProps> = ({
         <p className="text-[#d4d4d8] mt-3.5 text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-normal text-balance">{t.subtitle}</p>
       </div>
 
-      {/* Unified Cumulative Bar Across 3 Pillars | Symmetrical Terminal Banner */}
+      {/* Unified Cumulative Bar Across 3 Levels | Symmetrical Terminal Banner */}
       <TiltCard maxTilt={4} glowColor="magenta" className="mb-10 rounded-3xl bg-[#0a0a0a] border border-[#222222] shadow-2xl relative overflow-hidden">
         <div className="p-6 sm:p-8">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#e6007e]/12 rounded-full blur-3xl pointer-events-none" />
@@ -110,9 +110,9 @@ export const Passief: React.FC<PassiefProps> = ({
               <div>
                 <div className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#e6007e] mb-1">
                   <Sparkles className="w-3.5 h-3.5 text-[#e6007e] animate-pulse" />
-                  De 3 Pijlers Gecombineerd
+                  De 3 Levels Gecombineerd
                 </div>
-                <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">Totale Maandelijkse Cashflow</h3>
+                <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">Cashflow</h3>
                 <p className="text-xs sm:text-sm text-[#a1a1aa] font-medium mt-0.5">
                   Basis (€{basisIncome}) + Bonus (€{bonusIncome}) + Passief (€{passiveMonthly})
                 </p>
@@ -147,7 +147,7 @@ export const Passief: React.FC<PassiefProps> = ({
 
       <div className="grid lg:grid-cols-3 gap-8 relative z-10 items-stretch">
         
-        {/* Column 1: Config (Pijler 3 Calculator) */}
+        {/* Column 1: Config (Level 3 Calculator) */}
         <TiltCard maxTilt={5} glowColor="magenta" className="bg-[#0a0a0a] border border-[#222222] rounded-3xl shadow-xl overflow-hidden flex flex-col justify-between h-full">
           <div>
             <div className="bg-gradient-to-r from-[#e6007e] via-[#c00069] to-[#800045] px-6 sm:px-8 py-5 text-white">
@@ -157,7 +157,7 @@ export const Passief: React.FC<PassiefProps> = ({
                   <p className="text-white/85 text-xs sm:text-sm mt-0.5">{t.portfolioSubtitle}</p>
                 </div>
                 <span className="bg-black/35 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
-                  Pijler 3
+                  Level 3
                 </span>
               </div>
             </div>

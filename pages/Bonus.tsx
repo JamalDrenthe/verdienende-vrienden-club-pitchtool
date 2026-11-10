@@ -60,7 +60,7 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
                   <p className="text-white/85 text-xs sm:text-sm mt-0.5">{t.calcSubtitle}</p>
                 </div>
                 <span className="bg-black/35 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
-                  Pijler 2
+                  Level 2
                 </span>
               </div>
             </div>
@@ -110,12 +110,12 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
                 <GameRankBadge monthlyTotal={grandTotal} />
               </div>
 
-              {/* Cumulative Subtotal (Pijler 1 + 2) */}
+              {/* Cumulative Subtotal (Level 1 + 2) */}
               <div className="p-4 sm:p-5 rounded-2xl bg-[#0d0d0d] border border-[#222222] mb-6">
                 <div className="flex items-center justify-between text-xs sm:text-sm mb-2.5">
                   <span className="font-bold text-[#a1a1aa] flex items-center gap-2 uppercase tracking-wider text-xs">
                     <TrendingUp className="w-4 h-4 text-[#e6007e]" />
-                    Directe Maandinkomsten (Basis + Bonus):
+                    Basis + Bonus:
                   </span>
                   <span className="font-black text-white text-base sm:text-lg tabular-nums">
                     €{directSubtotal.toLocaleString('nl-NL')}<span className="text-xs text-[#a1a1aa] font-medium">/mnd</span>
@@ -168,10 +168,11 @@ export const Bonus: React.FC<BonusProps> = ({ onNavigate, language, calcState, s
 
           <div className="space-y-4">
             {t.cards.map((card, idx) => (
-              <TiltCard key={idx} maxTilt={3} glowColor="magenta" className="relative p-6 bg-[#0a0a0a] rounded-2xl border border-[#202020] shadow-md pl-8">
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#e6007e] rounded-l-2xl shadow-[0_0_12px_rgba(230,0,126,0.6)]" />
-                <h3 className="text-white font-black mb-1.5 text-base tracking-tight">{card.title}</h3>
-                <p className="text-sm text-[#a1a1aa] leading-relaxed font-normal">{card.text}</p>
+              <TiltCard key={idx} maxTilt={3} glowColor="none" className="relative p-6 bg-[#0a0a0a] rounded-2xl border border-[#202020] shadow-md">
+                <div className="relative z-10">
+                  <h3 className="text-white font-black mb-1.5 text-base tracking-tight">{card.title}</h3>
+                  <p className="text-sm text-[#a1a1aa] leading-relaxed font-normal">{card.text}</p>
+                </div>
               </TiltCard>
             ))}
           </div>

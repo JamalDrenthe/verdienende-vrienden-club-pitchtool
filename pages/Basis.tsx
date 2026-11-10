@@ -81,9 +81,9 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
           <div className="mt-8 p-5 rounded-2xl bg-[#0a0a0a] border border-[#222222] flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-3">
               <span className="w-3 h-3 rounded-full bg-[#e6007e] shadow-[0_0_10px_rgba(230,0,126,0.8)]" />
-              <span className="text-xs sm:text-sm font-bold text-[#a1a1aa] uppercase tracking-wider">Gegarandeerde Uurvergoeding:</span>
+              <span className="text-xs sm:text-sm font-bold text-[#a1a1aa] uppercase tracking-wider">Uurvergoeding:</span>
             </div>
-            <span className="text-base sm:text-lg font-black text-white tabular-nums tracking-tight">€30 ex btw per uur</span>
+            <span className="text-base sm:text-lg font-black text-white tabular-nums tracking-tight">€30,- per uur</span>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
                   <p className="text-white/85 text-xs sm:text-sm mt-0.5">{t.calcSubtitle}</p>
                 </div>
                 <span className="bg-black/35 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
-                  Pijler 1
+                  Level 1
                 </span>
               </div>
             </div>
@@ -153,7 +153,7 @@ export const Basis: React.FC<BasisProps> = ({ onNavigate, language, calcState, s
                 <div className="flex items-center justify-between text-xs sm:text-sm mb-2.5">
                   <span className="font-bold text-[#a1a1aa] flex items-center gap-2 uppercase tracking-wider text-xs">
                     <Sparkles className="w-4 h-4 text-[#e6007e] animate-pulse" />
-                    Totale Maandprognose:
+                    Prognose:
                   </span>
                   <span className="font-black text-white text-base sm:text-lg tabular-nums">
                     €{grandTotal.toLocaleString('nl-NL')}<span className="text-xs text-[#a1a1aa] font-medium">/mnd</span>

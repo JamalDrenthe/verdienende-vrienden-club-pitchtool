@@ -19,6 +19,59 @@ body {
   text-wrap: balance;
 }
 
+/* === Animated Value Filmstrip === */
+.stats-filmstrip {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  overflow: hidden;
+  padding: 1.1rem 0;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.stats-filmstrip__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-width: max-content;
+  animation: stats-filmstrip-scroll 22s linear infinite;
+}
+
+.stats-filmstrip__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding: 0 1.5rem;
+  color: #a1a1aa;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stats-filmstrip__item + .stats-filmstrip__item {
+  border-left: 1px solid #222222;
+}
+
+.stats-filmstrip__item strong {
+  color: #fff;
+  font-size: clamp(1.35rem, 3vw, 2.15rem);
+  letter-spacing: -0.07em;
+}
+
+@keyframes stats-filmstrip-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-filmstrip__track {
+    animation: none;
+  }
+}
+
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7);
@@ -441,4 +494,3 @@ input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   border: none;
 }
-

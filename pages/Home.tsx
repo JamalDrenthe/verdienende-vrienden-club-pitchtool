@@ -72,17 +72,17 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, language }) => {
           </button>
         </div>
 
-        {/* Symmetrical Stats Bar | Grid with Equal 3-Columns */}
+        {/* Animated value filmstrip */}
         <TiltCard maxTilt={4} glowColor="magenta" className="w-full max-w-3xl bg-[#0a0a0a] rounded-2xl border border-[#222222] shadow-2xl overflow-hidden">
-          <div className="grid grid-cols-3 divide-x divide-[#222222] py-4 px-2 sm:px-6">
-            {t.stats.map((stat, idx) => (
-              <div key={idx} className="flex flex-col items-center justify-center py-2 px-1 text-center">
-                <p className="text-2xl sm:text-4xl font-black text-white tracking-tighter tabular-nums drop-shadow-sm">
-                  {stat.value}
-                </p>
-                <p className="text-[10px] sm:text-[11px] text-[#a1a1aa] font-black uppercase tracking-[0.2em] mt-1">
-                  {stat.label}
-                </p>
+          <div className="stats-filmstrip" aria-label={t.stats.map((stat) => `${stat.value} ${stat.label}`).join(', ')}>
+            {[...Array(2)].map((_, copyIndex) => (
+              <div key={copyIndex} className="stats-filmstrip__track" aria-hidden={copyIndex > 0}>
+                {t.stats.map((stat, idx) => (
+                  <span key={`${copyIndex}-${idx}`} className="stats-filmstrip__item">
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
+                  </span>
+                ))}
               </div>
             ))}
           </div>
@@ -118,7 +118,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, language }) => {
                   <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed font-normal">{feat.desc}</p>
                 </div>
                 <div className="mt-5 pt-4 border-t border-[#1a1a1a] flex items-center justify-between text-[11px] font-bold text-[#e6007e]">
-                  <span className="uppercase tracking-wider">Pijler {idx + 1}</span>
+                  <span className="uppercase tracking-wider">Level {idx + 1}</span>
                   <span className="group-hover/card:translate-x-1 transition-transform">→</span>
                 </div>
               </TiltCard>

@@ -44,7 +44,7 @@ export const Pitch: React.FC<PitchProps> = ({ onNavigate, language }) => {
           {t.subtitle}
         </p>
         
-        {/* Symmetrical 3 Pillars Grid | Equal Heights */}
+        {/* Symmetrical 3 Levels Grid | Equal Heights */}
         <div className="grid md:grid-cols-3 gap-6 mb-14 text-left items-stretch">
           {t.cards.map((card, idx) => {
             const Icon = icons[idx];
@@ -69,7 +69,7 @@ export const Pitch: React.FC<PitchProps> = ({ onNavigate, language }) => {
                 </div>
                 
                 <div className="mt-6 pt-4 border-t border-[#1a1a1a] flex items-center justify-between text-xs font-bold text-white/50 group-hover:text-[#e6007e] transition-colors">
-                  <span>Bekijk Pijler</span>
+                  <span>Bekijk Level</span>
                   <span>→</span>
                 </div>
               </TiltCard>

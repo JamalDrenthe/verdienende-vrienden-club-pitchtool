@@ -55,9 +55,6 @@ export const GameRankBadge: React.FC<GameRankBadgeProps> = ({ monthlyTotal }) =>
               <span className="text-[10px] uppercase tracking-[0.2em] font-black text-[#a1a1aa]">
                 Level {currentRank.level}
               </span>
-              <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/60 border border-white/10 ${currentRank.color}`}>
-                Rank
-              </span>
             </div>
             <div className={`text-sm sm:text-base font-black tracking-tight ${currentRank.color} mt-0.5`}>
               {currentRank.title}

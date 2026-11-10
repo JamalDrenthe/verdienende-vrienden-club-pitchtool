@@ -11,7 +11,7 @@ interface FunnelProgressProps {
 }
 
 export const FUNNEL_STEPS: { id: PageView; num: number; labelNl: string; labelEn: string; subtitleNl: string; subtitleEn: string }[] = [
-  { id: 'pitch', num: 1, labelNl: 'Introductie', labelEn: 'Intro', subtitleNl: 'Drie Pijlers', subtitleEn: 'Three Pillars' },
+  { id: 'pitch', num: 1, labelNl: 'Introductie', labelEn: 'Intro', subtitleNl: 'Drie Levels', subtitleEn: 'Three Levels' },
   { id: 'basis', num: 2, labelNl: 'Basisvergoeding', labelEn: 'Base Salary', subtitleNl: '€30 per uur', subtitleEn: '€30 per hour' },
   { id: 'bonus', num: 3, labelNl: 'Plaatsingsbonus', labelEn: 'Deal Bonus', subtitleNl: '€300 per deal', subtitleEn: '€300 per deal' },
   { id: 'passief', num: 4, labelNl: 'Passief Inkomen', labelEn: 'Passive Residuals', subtitleNl: '€25/mnd recurring', subtitleEn: '€25/mo recurring' },

@@ -66,10 +66,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               alt="VVC Logo"
               className="w-9 h-9 rounded-full shadow-[0_0_16px_rgba(230,0,126,0.5)] group-hover:scale-105 transition-transform shrink-0"
             />
-            <div className="flex items-center">
-              <span className="font-black italic text-2xl tracking-tighter text-slate-900 dark:text-white">VVC</span>
-              <span className="text-[#e6007e] font-black text-2xl leading-none">.</span>
-            </div>
           </div>
 
           {/* Desktop Nav */}

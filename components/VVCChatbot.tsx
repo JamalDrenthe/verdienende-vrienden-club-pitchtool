@@ -14,7 +14,7 @@ interface Message {
 const knowledgeBase = [
   {
     keywords: ['verdien', 'geld', 'salaris', 'inkomen', 'betaald', '30', '300', 'finance'],
-    response: "Het VVC Verdienmodel bestaat uit drie pijlers:\n\n1. **Uurvergoeding:** €30 per uur gegarandeerd tijdens acquisitie.\n2. **Plaatsingsbonus:** €300 bonus per afgeronde plaatsing direct uitbetaald.\n3. **Passief Portfolio:** €25 per maand per actieve geplaatste kandidaat.\n\nRekenvoorbeeld: 120 plaatsingen per jaar levert €3.000 per maand passief inkomen op."
+    response: "Het VVC Verdienmodel bestaat uit drie levels:\n\n1. **Uurvergoeding:** €30 per uur gegarandeerd tijdens acquisitie.\n2. **Plaatsingsbonus:** €300 bonus per afgeronde plaatsing direct uitbetaald.\n3. **Passief Portfolio:** €25 per maand per actieve geplaatste kandidaat.\n\nRekenvoorbeeld: 120 plaatsingen per jaar levert €3.000 per maand passief inkomen op."
   },
   {
     keywords: ['cultuur', 'waarden', 'sfeer', 'normen', 'dna'],
