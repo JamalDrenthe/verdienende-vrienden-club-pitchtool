@@ -12,6 +12,7 @@ import { Passief } from './pages/Passief';
 import { Join } from './pages/Join';
 import { ProDetail } from './pages/ProDetail';
 import { PageView, Language, CalculatorState } from './types';
+import { sfx } from './lib/soundFx';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageView>('home');
@@ -235,8 +236,8 @@ export default function App() {
       <button
         aria-label="VVC AI Chat"
         onClick={() => {
-          sfx.click();
-          setChatOpen(!chatOpen);
+          try { sfx.click(); } catch {}
+          setChatOpen((prev) => !prev);
         }}
         className={`fixed bottom-6 right-6 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 z-50 flex items-center justify-center group ${
           chatOpen

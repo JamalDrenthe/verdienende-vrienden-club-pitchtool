@@ -27,6 +27,19 @@ class SoundEffects {
     return this.enabled;
   }
 
+  public toggle(): boolean {
+    this.enabled = !this.enabled;
+    if (this.enabled) {
+      this.click();
+    }
+    return this.enabled;
+  }
+
+  /** Chat pop audio feedback */
+  public pop() {
+    this.click();
+  }
+
   /** Zachte haptische klik */
   public click() {
     if (!this.enabled) return;
