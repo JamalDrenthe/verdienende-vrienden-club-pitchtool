@@ -111,11 +111,12 @@ export async function syncCandidateToCrmos(candidate: PitchCandidatePayload): Pr
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'X-CRMOS-API-KEY': CRMOS_API_KEY,
   };
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    headers['X-CRMOS-API-KEY'] = CRMOS_API_KEY;
   }
 
   const tags = ['#vvc', '#pitchtool'];
