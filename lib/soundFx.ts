@@ -40,6 +40,11 @@ class SoundEffects {
     this.click();
   }
 
+  /** Succes chime */
+  public success() {
+    this.levelUp();
+  }
+
   /** Zachte haptische klik */
   public click() {
     if (!this.enabled) return;

@@ -21,10 +21,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
   const handleDemoLogin = async () => {
     setError(null);
     setLoading(true);
-    sfx.click();
+    setEmail('test@vvc.works');
+    setPassword('geenbazenmaarpartners');
+    try { sfx.click(); } catch {}
     try {
       const user = await loginWithEmail('test@vvc.works', 'geenbazenmaarpartners');
-      sfx.success();
+      try { sfx.levelUp(); } catch {}
       onSuccess(user);
       onClose();
     } catch (err: any) {
@@ -36,7 +38,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
         photoURL: null,
         partnerCode: 'DEMO',
       };
-      sfx.success();
+      try { sfx.levelUp(); } catch {}
       onSuccess(fallbackUser);
       onClose();
     } finally {
@@ -47,10 +49,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
   const handleGoogleLogin = async () => {
     setError(null);
     setLoading(true);
-    sfx.click();
+    try { sfx.click(); } catch {}
     try {
       const user = await loginWithGoogle();
-      sfx.success();
+      try { sfx.levelUp(); } catch {}
       onSuccess(user);
       onClose();
     } catch (err: any) {
@@ -69,10 +71,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
     }
     setError(null);
     setLoading(true);
-    sfx.click();
+    try { sfx.click(); } catch {}
     try {
       const user = await loginWithEmail(email, password);
-      sfx.success();
+      try { sfx.levelUp(); } catch {}
       onSuccess(user);
       onClose();
     } catch (err: any) {
