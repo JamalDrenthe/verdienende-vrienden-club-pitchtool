@@ -13,6 +13,8 @@ import { Join } from './pages/Join';
 import { ProDetail } from './pages/ProDetail';
 import { PageView, Language, CalculatorState } from './types';
 import { sfx } from './lib/soundFx';
+import { initAuthListener, logout, type VvcUser } from './lib/firebase';
+import { AuthModal } from './components/AuthModal';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageView>('home');
@@ -22,6 +24,16 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<VvcUser | null>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  // Sync Firebase Auth & SSO cross-subdomain tokens
+  useEffect(() => {
+    const unsubscribe = initAuthListener((user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Cumulative Calculator State across all slides - starts at 0
   const [calcState, setCalcState] = useState<CalculatorState>({
@@ -145,6 +157,7 @@ export default function App() {
             language={language}
             onNavigate={setCurrentPage}
             calcState={calcState}
+            currentUser={currentUser}
           />
         );
       case 'pro':
@@ -209,6 +222,9 @@ export default function App() {
           toggleTheme={toggleTheme}
           language={language}
           toggleLanguage={toggleLanguage}
+          currentUser={currentUser}
+          onOpenLogin={() => setAuthModalOpen(true)}
+          onLogout={logout}
         />
 
         {/* Funnel Progress bar shown when in pitch flow */}
@@ -251,6 +267,16 @@ export default function App() {
           <MessageCircle className="w-6 h-6 group-hover:scale-105 transition-transform" />
         )}
       </button>
+
+      {/* VVC Partner Auth Modal (Google & Email/Password SSO) */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onLoginSuccess={(user) => {
+          setCurrentUser(user);
+          setAuthModalOpen(false);
+        }}
+      />
     </>
   );
 }

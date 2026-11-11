@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { CheckCircle2, AlertCircle, Loader2, Sparkles, Send, ArrowRight, MessageCircle, RefreshCw, ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle2, AlertCircle, Loader2, Sparkles, Send, ArrowRight, MessageCircle, RefreshCw, ChevronLeft, ShieldCheck } from 'lucide-react';
 import { VoiceMemo } from '../components/VoiceMemo';
 import { Language, PageView, CalculatorState } from '../types';
 import { translations } from '../translations';
@@ -7,6 +7,7 @@ import { TiltCard } from '../components/TiltCard';
 import { GameRankBadge } from '../components/GameRankBadge';
 import { sfx } from '../lib/soundFx';
 import { fireJackpotCelebration, fireConfetti } from '../lib/confetti';
+import { savePitchCandidateToFirestore, type VvcUser } from '../lib/firebase';
 
 const inputBase = "w-full bg-[#080808] border border-[#262626] rounded-2xl px-4 py-3.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e6007e]/50 focus:border-[#e6007e] placeholder-[#a1a1aa] transition-all duration-200 font-medium shadow-inner";
 
@@ -14,9 +15,10 @@ interface JoinProps {
   language: Language;
   onNavigate?: (page: PageView) => void;
   calcState?: CalculatorState;
+  currentUser?: VvcUser | null;
 }
 
-export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) => {
+export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState, currentUser }) => {
   const t = translations[language].join;
 
   // Form Fields
@@ -32,6 +34,19 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
   const [consultantEmail, setConsultantEmail] = useState('');
   const [cvName, setCvName] = useState('');
   const [verified, setVerified] = useState(false);
+
+  // Auto-detect referral code from URL or authenticated VVC partner
+  useEffect(() => {
+    if (currentUser?.email) {
+      setConsultantEmail(currentUser.email);
+    } else {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get('ref') || params.get('consultant');
+      if (ref) {
+        setConsultantEmail(ref);
+      }
+    }
+  }, [currentUser]);
 
   // Submission States
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +79,10 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
 
     setIsSubmitting(true);
 
+    const activePartnerEmail = consultantEmail.trim() || currentUser?.email || 'direct';
+    const activePartnerName = currentUser?.displayName || (consultantEmail ? `Partner (${consultantEmail.split('@')[0]})` : 'Organisch');
+    const activePartnerCode = currentUser?.partnerCode || (consultantEmail ? consultantEmail.split('@')[0].toUpperCase() : 'ORGANISCH');
+
     const payload = {
       first_name: firstName.trim(),
       last_name: lastName.trim(),
@@ -76,6 +95,7 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
         '#pitchtool',
         'Trainee',
         'Aanmelding',
+        `partner:${activePartnerCode.toLowerCase()}`,
         verified ? 'Voice-Verified' : 'Direct-Signup'
       ],
       status: 'qualified',
@@ -86,7 +106,7 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
         `• Level 1 (Basis €30/u): ${hours} uur/week = €${basisIncome}/mnd`,
         `• Level 2 (Bonus €300/deal): ${placements} deals = €${bonusIncome}/mnd`,
         `• Level 3 (Passief €${refValue}/mnd): ${referrals} accounts = €${passiveMonthly}/mnd`,
-        `Referrer / Pitch Consultant: ${consultantEmail.trim() || 'Niet opgegeven (organisch)'}`,
+        `Toegewezen Partner / Consultant: ${activePartnerName} <${activePartnerEmail}> (Code: ${activePartnerCode})`,
         `Adres: ${postalCode.trim()} ${houseNumber.trim()}`,
         `Leeftijd: ${age.trim() || 'Onbekend'}`,
         `Bedrijf: ${companyName.trim() || 'Geen (Particulier/Zzp)'}`,
@@ -97,30 +117,88 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
     };
 
     try {
-      const res = await fetch('https://crmos.one/api/v1/contacts/upsert', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CRMOS-API-KEY': 'crm_live_vvc_verdienende_vrienden_club_2026',
-        },
-        body: JSON.stringify(payload),
+      // 1. Realtime opslaan in Firebase Firestore (vvc-dev database)
+      const firestoreCandidateId = await savePitchCandidateToFirestore({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        fullName: `${firstName.trim()} ${lastName.trim()}`,
+        email: email.trim().toLowerCase(),
+        phone: phone.trim(),
+        postalCode: postalCode.trim(),
+        houseNumber: houseNumber.trim(),
+        age: age.trim() || null,
+        companyName: companyName.trim() || null,
+        kvk: kvk.trim() || null,
+        partnerId: currentUser?.uid || null,
+        partnerEmail: activePartnerEmail,
+        partnerName: activePartnerName,
+        partnerCode: activePartnerCode,
+        hours,
+        placements,
+        referrals,
+        refValue,
+        basisIncome,
+        bonusIncome,
+        passiveMonthly,
+        grandTotal,
+        grandAnnual,
+        verified,
+        cvName: cvName || null,
+        status: 'nieuw', // nieuw | screening | voorgesteld | geplaatst
+        stage: 'lead',
+        source: 'pitchtool',
       });
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => null);
-        throw new Error(errData?.error || `Server fout (${res.status})`);
+      // 2. Doorzetten naar CRMos contacts & candidates API
+      try {
+        await fetch('https://crmos.one/api/v1/contacts/upsert', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CRMOS-API-KEY': 'crm_live_vvc_verdienende_vrienden_club_2026',
+          },
+          body: JSON.stringify({
+            ...payload,
+            custom_fields: {
+              firestore_candidate_id: firestoreCandidateId,
+              partner_id: currentUser?.uid || null,
+              partner_code: activePartnerCode,
+              partner_email: activePartnerEmail,
+              monthly_goal: grandTotal,
+            }
+          }),
+        });
+      } catch (crmErr) {
+        console.warn('CRMos secondary sync notice:', crmErr);
       }
 
       sfx.jackpot();
       fireJackpotCelebration();
       setSubmitSuccess(true);
     } catch (err: any) {
-      console.error('CRMos sync error:', err);
-      // Fallback: If network or CORS restricts direct client fetch, we still show verified confirmation & log
+      console.error('Candidate sync error:', err);
+      // Fallback: Als Firestore offline is of faalt, push direct naar CRMos
+      try {
+        const res = await fetch('https://crmos.one/api/v1/contacts/upsert', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CRMOS-API-KEY': 'crm_live_vvc_verdienende_vrienden_club_2026',
+          },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          sfx.jackpot();
+          fireJackpotCelebration();
+          setSubmitSuccess(true);
+          return;
+        }
+      } catch {}
+
       setSubmitError(
         err?.message || (language === 'nl' 
-          ? 'Synchronisatie met CRMos mislukt. Controleer je internetverbinding of probeer opnieuw.' 
-          : 'Sync with CRMos failed. Check your connection or try again.')
+          ? 'Opslaan van kandidaat mislukt. Controleer je verbinding en probeer het opnieuw.' 
+          : 'Failed to save candidate. Please check your connection and try again.')
       );
     } finally {
       setIsSubmitting(false);
@@ -164,6 +242,24 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState }) =
             <p className="text-white/80 text-sm max-w-xl">{t.subtitle}</p>
           </div>
         </div>
+
+        {/* Partner Attribution Banner */}
+        {currentUser ? (
+          <div className="bg-[#e6007e]/15 border-b border-[#e6007e]/30 px-6 sm:px-10 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5 text-xs text-white">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Gekoppeld aan VVC Partner: <strong className="text-white">{currentUser.displayName}</strong> (<span className="font-mono text-[#e6007e] font-bold">{currentUser.partnerCode}</span>)</span>
+            </div>
+            <span className="hidden sm:inline-block text-[10px] uppercase font-mono tracking-wider text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Directe Sync Actief</span>
+          </div>
+        ) : consultantEmail ? (
+          <div className="bg-sky-500/10 border-b border-sky-500/20 px-6 sm:px-10 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs text-sky-200">
+              <span className="w-2 h-2 rounded-full bg-sky-400" />
+              <span>Attributie via partner link: <span className="font-mono font-bold text-white">{consultantEmail}</span></span>
+            </div>
+          </div>
+        ) : null}
 
         {/* Form Body or Success State */}
         <div className="bg-[#0a0a0a] px-6 sm:px-10 py-8">

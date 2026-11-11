@@ -3,6 +3,8 @@ import { Home, Share2, FileText, Play, TrendingUp, UserPlus, Menu, X, Globe, Moo
 import { PageView, Language } from '../types';
 import { translations } from '../translations';
 import { sfx } from '../lib/soundFx';
+import { type VvcUser } from '../lib/firebase';
+import { User, LogIn, LogOut, ExternalLink } from 'lucide-react';
 
 const EuroIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -19,6 +21,9 @@ interface NavbarProps {
   toggleTheme: () => void;
   language: Language;
   toggleLanguage: () => void;
+  currentUser?: VvcUser | null;
+  onOpenLogin?: () => void;
+  onLogout?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -29,7 +34,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   isDarkMode, 
   toggleTheme,
   language,
-  toggleLanguage
+  toggleLanguage,
+  currentUser,
+  onOpenLogin,
+  onLogout
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -111,6 +119,55 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               );
             })}
+
+            {/* VVC Partner Auth Badge / Login Trigger */}
+            {currentUser ? (
+              <div className="flex items-center gap-2 pl-2">
+                <a
+                  href="https://login.verdienendevrienden.club/dashboard"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#e6007e]/10 hover:bg-[#e6007e]/20 border border-[#e6007e]/30 transition-all text-left group"
+                  title="Naar VVC Partner Dashboard"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-[#e6007e] text-white flex items-center justify-center font-bold text-xs shadow-[0_0_12px_rgba(230,0,126,0.5)]">
+                    {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'V'}
+                  </div>
+                  <div className="hidden lg:block text-left">
+                    <p className="text-[11px] font-black text-slate-900 dark:text-white leading-tight truncate max-w-[100px] flex items-center gap-1">
+                      {currentUser.displayName}
+                      <ExternalLink className="w-2.5 h-2.5 text-[#e6007e] opacity-70 group-hover:opacity-100" />
+                    </p>
+                    <p className="text-[9px] font-mono text-[#e6007e] uppercase tracking-wider">
+                      {currentUser.partnerCode || 'PARTNER'}
+                    </p>
+                  </div>
+                </a>
+                {onLogout && (
+                  <button
+                    onClick={() => {
+                      sfx.click();
+                      onLogout();
+                    }}
+                    title="Uitloggen"
+                    className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-slate-200 dark:border-[#262626] transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  sfx.click();
+                  onOpenLogin?.();
+                }}
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#e6007e]/15 hover:bg-[#e6007e]/25 text-[#e6007e] border border-[#e6007e]/40 shadow-[0_0_15px_rgba(230,0,126,0.2)] transition-all ml-1 cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Inloggen</span>
+              </button>
+            )}
 
             {/* Hamburger Menu (Alles na Join) */}
             <div className="relative ml-2" ref={menuRef}>
@@ -286,6 +343,57 @@ export const Navbar: React.FC<NavbarProps> = ({
       {mobileMenuOpen && (
         <div className="md:hidden bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-2xl border-t border-slate-200 dark:border-[#1a1a1a] animate-in slide-in-from-top-4 duration-200">
           <div className="px-3 pt-3 pb-4 space-y-1">
+            {/* Mobile Partner Status / Login */}
+            {currentUser ? (
+              <div className="p-3 mb-2 rounded-xl bg-slate-100 dark:bg-[#141414] border border-[#e6007e]/30 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-[#e6007e] text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_rgba(230,0,126,0.4)]">
+                    {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'V'}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">{currentUser.displayName}</p>
+                    <p className="text-[10px] text-[#e6007e] font-mono">{currentUser.partnerCode || 'VVC PARTNER'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href="https://login.verdienendevrienden.club/dashboard"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1.5 rounded-lg bg-[#e6007e]/15 text-[#e6007e] hover:bg-[#e6007e]/25 border border-[#e6007e]/30 text-[11px] font-bold flex items-center gap-1"
+                  >
+                    <span>Dashboard</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  {onLogout && (
+                    <button
+                      onClick={() => {
+                        sfx.click();
+                        onLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10"
+                      title="Uitloggen"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  sfx.click();
+                  onOpenLogin?.();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full mb-2 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#e6007e] hover:bg-[#c00069] text-white text-xs font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(230,0,126,0.4)] transition-all cursor-pointer"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Partner Inloggen</span>
+              </button>
+            )}
+
             {/* Primary Nav Links */}
             {navItems.map((item) => (
               <button
