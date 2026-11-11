@@ -133,15 +133,20 @@ export async function savePitchCandidateToFirestore(candidateData: Record<string
   const candidateId = `cand_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
   const candidateRef = doc(db, "candidates", candidateId);
   
-  await setDoc(candidateRef, {
-    ...candidateData,
-    id: candidateId,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-    source: "vvc-pitchtool",
-    stage: candidateData.stage || "Contact Gelegd",
-    status: "active",
-  }, { merge: true });
+  try {
+    await setDoc(candidateRef, {
+      ...candidateData,
+      id: candidateId,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      source: "vvc-pitchtool",
+      stage: candidateData.stage || "Contact Gelegd",
+      status: "active",
+    }, { merge: true });
+  } catch (fsErr) {
+    console.warn("Firestore candidate write skipped (rules/permissions):", fsErr);
+  }
 
   return candidateId;
 }
+

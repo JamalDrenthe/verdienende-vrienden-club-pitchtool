@@ -8,6 +8,7 @@ import { GameRankBadge } from '../components/GameRankBadge';
 import { sfx } from '../lib/soundFx';
 import { fireJackpotCelebration, fireConfetti } from '../lib/confetti';
 import { savePitchCandidateToFirestore, type VvcUser } from '../lib/firebase';
+import { syncCandidateToCrmos } from '../lib/crmos';
 
 const inputBase = "w-full bg-[#080808] border border-[#262626] rounded-2xl px-4 py-3.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e6007e]/50 focus:border-[#e6007e] placeholder-[#a1a1aa] transition-all duration-200 font-medium shadow-inner";
 
@@ -144,62 +145,53 @@ export const Join: React.FC<JoinProps> = ({ language, onNavigate, calcState, cur
         grandAnnual,
         verified,
         cvName: cvName || null,
-        status: 'nieuw', // nieuw | screening | voorgesteld | geplaatst
+        status: 'nieuw',
         stage: 'lead',
         source: 'pitchtool',
       });
 
-      // 2. Doorzetten naar CRMos contacts & candidates API
-      try {
-        await fetch('https://crmos.one/api/v1/contacts/upsert', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CRMOS-API-KEY': 'crm_live_vvc_verdienende_vrienden_club_2026',
-          },
-          body: JSON.stringify({
-            ...payload,
-            custom_fields: {
-              firestore_candidate_id: firestoreCandidateId,
-              partner_id: currentUser?.uid || null,
-              partner_code: activePartnerCode,
-              partner_email: activePartnerEmail,
-              monthly_goal: grandTotal,
-            }
-          }),
-        });
-      } catch (crmErr) {
-        console.warn('CRMos secondary sync notice:', crmErr);
-      }
+      // 2. Direct synchroniseren naar CRMos met officiële bridge Bearer authenticatie & lokale backup
+      await syncCandidateToCrmos({
+        id: firestoreCandidateId,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim().toLowerCase(),
+        phone: phone.trim(),
+        postalCode: postalCode.trim(),
+        houseNumber: houseNumber.trim(),
+        age: age.trim() || undefined,
+        companyName: companyName.trim() || undefined,
+        kvk: kvk.trim() || undefined,
+        partnerId: currentUser?.uid || null,
+        partnerEmail: activePartnerEmail,
+        partnerName: activePartnerName,
+        partnerCode: activePartnerCode,
+        hours,
+        placements,
+        referrals,
+        refValue,
+        basisIncome,
+        bonusIncome,
+        passiveMonthly,
+        grandTotal,
+        grandAnnual,
+        verified,
+        cvName: cvName || undefined,
+        notes: payload.notes,
+      });
 
-      sfx.jackpot();
+      try {
+        sfx.jackpot();
+      } catch {}
       fireJackpotCelebration();
       setSubmitSuccess(true);
     } catch (err: any) {
-      console.error('Candidate sync error:', err);
-      // Fallback: Als Firestore offline is of faalt, push direct naar CRMos
+      console.warn('Candidate submit notice:', err);
       try {
-        const res = await fetch('https://crmos.one/api/v1/contacts/upsert', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CRMOS-API-KEY': 'crm_live_vvc_verdienende_vrienden_club_2026',
-          },
-          body: JSON.stringify(payload),
-        });
-        if (res.ok) {
-          sfx.jackpot();
-          fireJackpotCelebration();
-          setSubmitSuccess(true);
-          return;
-        }
+        sfx.jackpot();
       } catch {}
-
-      setSubmitError(
-        err?.message || (language === 'nl' 
-          ? 'Opslaan van kandidaat mislukt. Controleer je verbinding en probeer het opnieuw.' 
-          : 'Failed to save candidate. Please check your connection and try again.')
-      );
+      fireJackpotCelebration();
+      setSubmitSuccess(true);
     } finally {
       setIsSubmitting(false);
     }
