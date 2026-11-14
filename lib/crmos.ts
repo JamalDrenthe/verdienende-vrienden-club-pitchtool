@@ -1,49 +1,25 @@
 /**
  * CRMos Bi-directionele Bridge Client voor Pitch Tool
- * Communiceert vlekkeloos met CRMos API (https://crmos.one/api/v1)
- * met automatische bridge token authenticatie.
+ * Communiceert veilig met CRMos API (https://crmos.one/api/v1)
+ * met veilige sessie-gebaseerde authenticatie.
  */
 
-const CRMOS_BASE_URL = 'https://crmos.one/api/v1';
-const CRMOS_API_KEY = 'crm_live_vvc_verdienende_vrienden_club_2026';
+import { auth } from './firebase';
 
-let cachedBridgeToken: string | null = null;
-let tokenExpiresAt = 0;
+const CRMOS_BASE_URL = (import.meta.env.VITE_CRMOS_BASE_URL || 'https://crmos.one/api/v1').trim();
+const CRMOS_API_KEY = (import.meta.env.VITE_CRMOS_API_KEY || '').trim();
 
 /**
- * Haalt een geldig Firebase Bearer ID-token op voor CRMos via de bridge service-account
+ * Haalt een geldig Firebase Bearer ID-token op als de partner is ingelogd
  */
 export async function getCrmosBridgeToken(): Promise<string | null> {
-  const now = Date.now();
-  if (cachedBridgeToken && now < tokenExpiresAt - 60000) {
-    return cachedBridgeToken;
-  }
-
   try {
-    const res = await fetch(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCsBPKp7i7Cd959bF8hZzTDtV_V_7cI9Xo',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: 'vvc-sync-test@crmos.one',
-          password: 'VvcSyncTest2026!',
-          returnSecureToken: true,
-        }),
-      }
-    );
-
-    if (!res.ok) {
-      console.warn('CRMos bridge auth warning (status):', res.status);
-      return null;
+    if (auth.currentUser) {
+      return await auth.currentUser.getIdToken();
     }
-
-    const data = await res.json();
-    cachedBridgeToken = data.idToken;
-    tokenExpiresAt = now + (parseInt(data.expiresIn || '3600', 10) * 1000);
-    return cachedBridgeToken;
+    return null;
   } catch (err) {
-    console.warn('CRMos bridge auth fetch notice:', err);
+    console.warn('CRMos bridge auth token notice:', err);
     return null;
   }
 }
@@ -78,35 +54,9 @@ export interface PitchCandidatePayload {
 }
 
 /**
- * Slaat de kandidaat op in localStorage als offline veilige cache
- */
-function cacheCandidateLocally(candidate: PitchCandidatePayload & { savedAt: string }) {
-  try {
-    const raw = localStorage.getItem('vvc_pitch_candidates');
-    const list: any[] = raw ? JSON.parse(raw) : [];
-    // Voeg toe of update
-    const idx = list.findIndex((c) => c.email === candidate.email || (candidate.id && c.id === candidate.id));
-    if (idx >= 0) {
-      list[idx] = { ...list[idx], ...candidate };
-    } else {
-      list.unshift(candidate);
-    }
-    localStorage.setItem('vvc_pitch_candidates', JSON.stringify(list.slice(0, 100)));
-  } catch (e) {
-    console.warn('LocalStorage save notice:', e);
-  }
-}
-
-/**
- * Upsert kandidaat direct naar CRMos Contacts API
+ * Upsert kandidaat naar CRMos Contacts API indien geconfigureerd
  */
 export async function syncCandidateToCrmos(candidate: PitchCandidatePayload): Promise<{ success: boolean; data?: any }> {
-  // Sla altijd lokaal op ter beveiliging
-  cacheCandidateLocally({
-    ...candidate,
-    savedAt: new Date().toISOString(),
-  });
-
   const token = await getCrmosBridgeToken();
 
   const headers: Record<string, string> = {
@@ -115,7 +65,7 @@ export async function syncCandidateToCrmos(candidate: PitchCandidatePayload): Pr
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-  } else {
+  } else if (CRMOS_API_KEY) {
     headers['X-CRMOS-API-KEY'] = CRMOS_API_KEY;
   }
 
@@ -171,11 +121,11 @@ export async function syncCandidateToCrmos(candidate: PitchCandidatePayload): Pr
       const data = await res.json();
       return { success: true, data };
     } else {
-      console.warn('CRMos upsert returned status:', res.status);
+      console.warn('CRMos upsert status:', res.status);
       return { success: false };
     }
   } catch (err) {
-    console.warn('CRMos network sync notice:', err);
+    console.warn('CRMos sync notice:', err);
     return { success: false };
   }
 }
