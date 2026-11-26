@@ -272,10 +272,11 @@ export default function App() {
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
-        onLoginSuccess={(user) => {
+        onSuccess={(user) => {
           setCurrentUser(user);
           setAuthModalOpen(false);
         }}
+        language={language}
       />
     </>
   );
