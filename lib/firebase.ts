@@ -50,24 +50,39 @@ export interface VvcUser {
 }
 
 /**
- * Luistert naar auth-state en checkt eventuele SSO-handoff tokens in de URL
+ * Luistert naar auth-state en verwerkt SSO-handoff tokens veilig via URL hash fragment (#sso_token=...).
+ * Hash fragments worden nooit meegestuurd naar servers of gelogd in access logs / Referer headers.
  */
 export function initAuthListener(onUserChange: (user: VvcUser | null) => void): () => void {
-  // Check SSO token in URL als die aanwezig is (?sso_token=...)
   if (typeof window !== "undefined") {
-    const params = new URLSearchParams(window.location.search);
-    const ssoToken = params.get("sso_token");
-    if (ssoToken) {
-      signInWithCustomToken(auth, ssoToken)
-        .then(() => {
-          // Verwijder token uit url voor netheid
-          params.delete("sso_token");
-          const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}${window.location.hash}`;
-          window.history.replaceState({}, document.title, newUrl);
-        })
-        .catch((err) => {
-          console.warn("SSO token verificatie overgeslagen/verlopen:", err);
+    // Strip legacy ?sso_token query parameter direct uit URL zonder deze te verwerken of loggen
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has("sso_token")) {
+      searchParams.delete("sso_token");
+      const cleanSearch = searchParams.toString();
+      window.history.replaceState(
+        {},
+        document.title,
+        `${window.location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${window.location.hash}`
+      );
+    }
+
+    // Lees SSO token uitsluitend uit het URL hash fragment (#sso_token=...)
+    const rawHash = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : "";
+    if (rawHash) {
+      const hashParams = new URLSearchParams(rawHash);
+      const ssoToken = hashParams.get("sso_token");
+      if (ssoToken) {
+        // Verwijder token onmiddellijk uit de URL/browsergeschiedenis vóór verificatie
+        hashParams.delete("sso_token");
+        const remainingHash = hashParams.toString();
+        const cleanUrl = `${window.location.pathname}${window.location.search}${remainingHash ? `#${remainingHash}` : ""}`;
+        window.history.replaceState({}, document.title, cleanUrl);
+
+        signInWithCustomToken(auth, ssoToken).catch(() => {
+          console.warn("SSO token verificatie overgeslagen of verlopen.");
         });
+      }
     }
   }
 

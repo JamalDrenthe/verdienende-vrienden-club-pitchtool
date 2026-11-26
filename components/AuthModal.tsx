@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Mail, AlertCircle, Loader2, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
+import { X, Lock, Mail, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 import { loginWithGoogle, loginWithEmail, type VvcUser } from '../lib/firebase';
 import { sfx } from '../lib/soundFx';
 
@@ -7,44 +7,16 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (user: VvcUser) => void;
-  language: 'nl' | 'en';
+  language?: 'nl' | 'en';
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, language }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, language = 'nl' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
-
-  const handleDemoLogin = async () => {
-    setError(null);
-    setLoading(true);
-    setEmail('test@vvc.works');
-    setPassword('geenbazenmaarpartners');
-    try { sfx.click(); } catch {}
-    try {
-      const user = await loginWithEmail('test@vvc.works', 'geenbazenmaarpartners');
-      try { sfx.levelUp(); } catch {}
-      onSuccess(user);
-      onClose();
-    } catch (err: any) {
-      console.warn('Firebase demo login notice, activating verified demo session:', err);
-      const fallbackUser: VvcUser = {
-        uid: 'WBhNz0RD8tapURpwTrXRpG1vyED3',
-        email: 'test@vvc.works',
-        displayName: 'VVC Demo Partner',
-        photoURL: null,
-        partnerCode: 'DEMO',
-      };
-      try { sfx.levelUp(); } catch {}
-      onSuccess(fallbackUser);
-      onClose();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleGoogleLogin = async () => {
     setError(null);
@@ -132,31 +104,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
             <span>{error}</span>
           </div>
         )}
-
-        {/* Direct Demo Account 1-Click Login */}
-        <button
-          type="button"
-          disabled={loading}
-          onClick={handleDemoLogin}
-          className="w-full flex items-center justify-between py-3 px-4 rounded-2xl bg-[#e6007e]/15 hover:bg-[#e6007e]/25 text-white border border-[#e6007e]/40 shadow-[0_0_20px_rgba(230,0,126,0.25)] transition-all mb-3 group cursor-pointer disabled:opacity-50"
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#e6007e] text-white flex items-center justify-center font-black text-xs shadow-md shadow-[#e6007e]/50">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div className="text-left">
-              <p className="text-xs font-black text-white flex items-center gap-1.5">
-                <span>Demo Account</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase font-mono font-bold">1-Click</span>
-              </p>
-              <p className="text-[10px] text-neutral-400 font-mono">test@vvc.works</p>
-            </div>
-          </div>
-          <span className="text-xs font-bold text-[#e6007e] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
-            <span>Direct Demo</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </span>
-        </button>
 
         {/* Google One-Click Login */}
         <button
